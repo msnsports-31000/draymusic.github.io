@@ -158,7 +158,7 @@
         var container = document.getElementById("home-container") || document.body;
 
         WinJS.xhr({
-            url: `${server}`,
+            url: server,
         }).then(function (res) {
             try {
                 var parser = new DOMParser();
