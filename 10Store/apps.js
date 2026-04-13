@@ -26,7 +26,7 @@
         var grid = document.getElementById("apps-grid");
 
         WinJS.xhr({
-            url: `${server}`,
+            url: server,
         }).then(function (res) {
             try {
                 var parser = new DOMParser();
