@@ -9,6 +9,7 @@
     <link rel="manifest" href="manifest.json">
     <link rel="stylesheet" href="style.css">
     <link href="google.css" rel="stylesheet">
+    <link href="https://10storedraydenyt.vercel.app/w8incss/style.css" rel="stylesheet">
     <style>
         #errorScreen {
             position: fixed;
@@ -18,7 +19,7 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            background: #640000;
+            background: #640000 !important;
             font-family: system-ui, "Segoe UI", Roboto;
         }
 
@@ -67,7 +68,7 @@
             }
     </style>
 </head>
-<body>
+<body class="win-dark">
     <img id="body-bg" src="gradient.gif" aria-hidden="true">
     <header class="app-header">
         <h1>DrayMusic</h1>
@@ -104,7 +105,7 @@
             <h2 class="error-title">Something went wrong</h2>
             <p id="errorMessage" class="error-message">An unexpected error occurred.</p>
             <div class="error-actions">
-                <button id="errorRetry" class="btn">Reload</button>
+                <button id="errorRetry" class="win-button">Reload</button>
             </div>
         </div>
     </div>
