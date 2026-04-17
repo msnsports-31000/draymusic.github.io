@@ -414,6 +414,117 @@ body.widgetapp #body-bg {
     border-radius: 50%;
 }
 
+/* ===== Audio Settings Side Pane ===== */
+.side-pane {
+    position: fixed;
+    top: 0;
+    right: -320px; /* Hidden off-screen by default */
+    width: 300px;
+    height: 100vh;
+    background: rgba(18, 18, 18, 0.7);
+    backdrop-filter: blur(25px);
+    -webkit-backdrop-filter: blur(25px);
+    border-left: 1px solid rgba(255, 255, 255, 0.1);
+    transition: right 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    z-index: 100;
+    display: flex;
+    flex-direction: column;
+    padding: 20px;
+    box-shadow: -5px 0 25px rgba(0,0,0,0.5);
+}
+
+.side-pane.open {
+    right: 0;
+}
+
+.pane-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 30px;
+}
+
+.pane-header h2 {
+    margin: 0;
+    font-size: 20px;
+    font-weight: 600;
+}
+
+.pane-content {
+    flex: 1;
+    overflow-y: auto;
+}
+
+.control-group {
+    margin-bottom: 25px;
+    background: rgba(255, 255, 255, 0.05);
+    padding: 15px;
+    border-radius: 15px;
+}
+
+.control-group h3 {
+    font-size: 13px;
+    color: var(--accent);
+    margin: 0 0 15px 0;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.eq-sliders {
+    display: flex;
+    justify-content: space-between;
+    height: 140px;
+    align-items: flex-end;
+}
+
+.eq-slider-col {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+/* Vertical Sliders cross-browser hack */
+.eq-slider-col input[type=range] {
+    writing-mode: bt-lr; /* IE */
+    -webkit-appearance: slider-vertical; /* WebKit */
+    width: 8px;
+    height: 100px;
+    padding: 0;
+    margin: 0;
+    cursor: pointer;
+}
+
+.eq-slider-col label {
+    font-size: 11px;
+    color: var(--text-dim);
+    margin-top: 10px;
+}
+
+.slider-row {
+    display: flex;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
+.slider-row label {
+    width: 35px;
+    font-size: 13px;
+    color: var(--text-dim);
+}
+
+.slider-row input[type=range] {
+    flex: 1;
+    margin: 0 10px;
+    cursor: pointer;
+}
+
+.slider-row span {
+    font-size: 13px;
+    width: 45px;
+    text-align: right;
+    color: var(--on-surface);
+}
+
 @media (min-width: 800px) {
     .app-header {
         display: flex;
