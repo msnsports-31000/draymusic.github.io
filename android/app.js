@@ -552,4 +552,135 @@ if (searchInput) {
     }
 })();
 
+/* ===== Audio Settings (EQ, Pitch, Reverb) Integration ===== */
+var audioCtx;
+var track;
+var eqBands = [];
+var convolver;
+var dryGain;
+var wetGain;
+var audioInitialized = false;
+
+function initWebAudio() {
+    if (audioInitialized) return;
+    var AudioContext = window.AudioContext || window.webkitAudioContext;
+    if (!AudioContext) {
+        console.warn('Web Audio API not supported in this browser');
+        return;
+    }
+
+    try {
+        audioCtx = new AudioContext();
+        track = audioCtx.createMediaElementSource(audio);
+
+        // 1. Setup 5-Band EQ
+        var freqs = [60, 230, 910, 3600, 14000];
+        var types = ['lowshelf', 'peaking', 'peaking', 'peaking', 'highshelf'];
+        var prevNode = track;
+
+        for (var i = 0; i < freqs.length; i++) {
+            var eq = audioCtx.createBiquadFilter();
+            eq.type = types[i];
+            eq.frequency.value = freqs[i];
+            eq.gain.value = 0; // Flat initially
+            eqBands.push(eq);
+            prevNode.connect(eq);
+            prevNode = eq;
+        }
+
+        // 2. Setup Reverb (Convolver) and Dry/Wet mix
+        convolver = audioCtx.createConvolver();
+        dryGain = audioCtx.createGain();
+        wetGain = audioCtx.createGain();
+
+        dryGain.gain.value = 1; // Full dry
+        wetGain.gain.value = 0; // Zero wet
+
+        // Generate a synthetic impulse response for the reverb (prevents needing external files)
+        var rate = audioCtx.sampleRate;
+        var length = rate * 2; // 2 second tail
+        var impulse = audioCtx.createBuffer(2, length, rate);
+        var left = impulse.getChannelData(0);
+        var right = impulse.getChannelData(1);
+        for (var j = 0; j < length; j++) {
+            var n = length - j;
+            left[j] = (Math.random() * 2 - 1) * Math.pow(n / length, 2) * Math.exp(-j / (rate * 0.5));
+            right[j] = (Math.random() * 2 - 1) * Math.pow(n / length, 2) * Math.exp(-j / (rate * 0.5));
+        }
+        convolver.buffer = impulse;
+
+        // 3. Connect the routing graph
+        prevNode.connect(dryGain);
+        prevNode.connect(convolver);
+        convolver.connect(wetGain);
+
+        dryGain.connect(audioCtx.destination);
+        wetGain.connect(audioCtx.destination);
+
+        audioInitialized = true;
+    } catch (e) {
+        console.warn("Web Audio API setup failed:", e);
+    }
+}
+
+// Ensure audio context starts on user interaction
+if (audio) {
+    audio.addEventListener('play', function() {
+        initWebAudio();
+        if (audioCtx && audioCtx.state === 'suspended') {
+            audioCtx.resume();
+        }
+    });
+}
+
+// Side Pane UI Toggle
+var btnEQ = document.getElementById('btnEQ');
+var eqPane = document.getElementById('eqPane');
+var btnCloseEQ = document.getElementById('btnCloseEQ');
+
+if (btnEQ && eqPane) {
+    btnEQ.onclick = function() { eqPane.classList.add('open'); };
+}
+if (btnCloseEQ && eqPane) {
+    btnCloseEQ.onclick = function() { eqPane.classList.remove('open'); };
+}
+
+// Wire EQ Sliders
+for (var k = 0; k < 5; k++) {
+    (function(index) {
+        var slider = document.getElementById('eqSlider' + index);
+        if (slider) {
+            slider.addEventListener('input', function(e) {
+                if (eqBands[index]) eqBands[index].gain.value = parseFloat(e.target.value);
+            });
+        }
+    })(k);
+}
+
+// Wire Speed / Pitch Slider
+var speedSlider = document.getElementById('speedSlider');
+var speedLabel = document.getElementById('speedLabel');
+if (speedSlider) {
+    speedSlider.addEventListener('input', function(e) {
+        var val = parseFloat(e.target.value);
+        if (audio) audio.playbackRate = val;
+        if (speedLabel) speedLabel.innerText = val.toFixed(2) + 'x';
+    });
+}
+
+// Wire Reverb Sliders
+var drySlider = document.getElementById('drySlider');
+if (drySlider) {
+    drySlider.addEventListener('input', function(e) {
+        if (dryGain) dryGain.gain.value = parseFloat(e.target.value);
+    });
+}
+
+var wetSlider = document.getElementById('wetSlider');
+if (wetSlider) {
+    wetSlider.addEventListener('input', function(e) {
+        if (wetGain) wetGain.gain.value = parseFloat(e.target.value);
+    });
+}
+
 loadMusic();
