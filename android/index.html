@@ -110,6 +110,42 @@
             </div>
         </div>
     </div>
+    <div id="eqPane" class="side-pane">
+        <div class="pane-header">
+            <h2>Audio Settings</h2>
+            <button id="btnCloseEQ" class="icon-btn"><span class="material-symbols-rounded">close</span></button>
+        </div>
+        <div class="pane-content">
+            <div class="control-group">
+                <h3>Equalizer</h3>
+                <div class="eq-sliders">
+                    <div class="eq-slider-col"><input type="range" class="eq-slider" id="eqSlider0" min="-12" max="12" step="0.1" value="0"><label>60</label></div>
+                    <div class="eq-slider-col"><input type="range" class="eq-slider" id="eqSlider1" min="-12" max="12" step="0.1" value="0"><label>230</label></div>
+                    <div class="eq-slider-col"><input type="range" class="eq-slider" id="eqSlider2" min="-12" max="12" step="0.1" value="0"><label>910</label></div>
+                    <div class="eq-slider-col"><input type="range" class="eq-slider" id="eqSlider3" min="-12" max="12" step="0.1" value="0"><label>3.6k</label></div>
+                    <div class="eq-slider-col"><input type="range" class="eq-slider" id="eqSlider4" min="-12" max="12" step="0.1" value="0"><label>14k</label></div>
+                </div>
+            </div>
+            <div class="control-group">
+                <h3>Speed / Pitch</h3>
+                <div class="slider-row">
+                    <input type="range" id="speedSlider" min="0.5" max="2" step="0.05" value="1">
+                    <span id="speedLabel">1.00x</span>
+                </div>
+            </div>
+            <div class="control-group">
+                <h3>Reverb</h3>
+                <div class="slider-row">
+                    <label>Dry</label>
+                    <input type="range" id="drySlider" min="0" max="1" step="0.05" value="1">
+                </div>
+                <div class="slider-row">
+                    <label>Wet</label>
+                    <input type="range" id="wetSlider" min="0" max="1" step="0.05" value="0">
+                </div>
+            </div>
+        </div>
+    </div>
     <audio id="audioElement" msAudioCategory="BackgroundCapableMedia" crossorigin="anonymous"></audio>
     <script src="app.js"></script>
     <script>
