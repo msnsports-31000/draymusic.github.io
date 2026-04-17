@@ -93,6 +93,7 @@
                 </div>
             </div>
             <div class="action-btns">
+                <button id="btnEQ" class="icon-btn"><span class="material-symbols-rounded">tune</span></button>
                 <button id="btnLoop" class="icon-btn"><span class="material-symbols-rounded">repeat</span></button>
                 <button id="btnPrev" class="icon-btn"><span class="material-symbols-rounded">skip_previous</span></button>
                 <button id="btnPlayPause" class="main-play-btn"><span class="material-symbols-rounded">play_arrow</span></button>
@@ -109,7 +110,7 @@
             </div>
         </div>
     </div>
-    <audio id="audioElement" msAudioCategory="BackgroundCapableMedia"></audio>
+    <audio id="audioElement" msAudioCategory="BackgroundCapableMedia" crossorigin="anonymous"></audio>
     <script src="app.js"></script>
     <script>
           document.addEventListener('contextmenu', function (e) {
