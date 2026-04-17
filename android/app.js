@@ -16,13 +16,13 @@ var btnEQ = document.getElementById('btnEQ');
 var btnCloseEQ = document.getElementById('btnCloseEQ');
 
 if (btnEQ && eqPane) {
-    btnEQ.onclick = function() {
+    btnEQ.onclick = function () {
         eqPane.classList.add('open');
     };
 }
 
 if (btnCloseEQ && eqPane) {
-    btnCloseEQ.onclick = function() {
+    btnCloseEQ.onclick = function () {
         eqPane.classList.remove('open');
     };
 }
@@ -115,18 +115,18 @@ if (audio) {
 // Fixed loadMusic: Chrome 50 does not support async/await
 function loadMusic() {
     var url = 'https://draydenthemiiyt-maker.github.io/draymusic.github.io/music.xml?nocache=' + Date.now();
-    
+
     fetch(url)
-        .then(function(response) { return response.text(); })
-        .then(function(text) {
+        .then(function (response) { return response.text(); })
+        .then(function (text) {
             var xml = new DOMParser().parseFromString(text, 'text/xml');
             var items = xml.getElementsByTagName('song') || [];
-            
+
             // Convert HTMLCollection to Array manually for old engine safety
             allSongs = [];
             for (var k = 0; k < items.length; k++) {
                 var s = items[k];
-                var getText = function(tag) {
+                var getText = function (tag) {
                     var el = s.getElementsByTagName(tag)[0];
                     return el && el.textContent ? el.textContent : '';
                 };
@@ -150,7 +150,7 @@ function loadMusic() {
             currentPlaylist = allSongs.slice();
             renderList(currentPlaylist);
         })
-        .catch(function(e) {
+        .catch(function (e) {
             console.warn('Failed to load music:', e);
         });
 }
@@ -158,8 +158,8 @@ function loadMusic() {
 function renderList(data) {
     if (!songListContainer) return;
 
-    var esc = function(str) { 
-        return String(str || '').replace(/&/g, '&amp;').replace(/"/g, '&quot;').replace(/</g, '&lt;').replace(/>/g, '&gt;'); 
+    var esc = function (str) {
+        return String(str || '').replace(/&/g, '&amp;').replace(/"/g, '&quot;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
     };
 
     var html = '';
@@ -192,7 +192,7 @@ function playSong(index) {
     if (!song || !song.url) return;
 
     audio.src = song.url;
-    audio.play().catch(function(err) {
+    audio.play().catch(function (err) {
         console.warn('Playback failed:', err);
     });
 
@@ -212,9 +212,9 @@ function playPrev() { playSong(currentIndex - 1); }
 
 var btnPlayPause = document.getElementById('btnPlayPause');
 if (btnPlayPause && audio) {
-    btnPlayPause.onclick = function() {
+    btnPlayPause.onclick = function () {
         if (audio.paused) {
-            audio.play().catch(function() { });
+            audio.play().catch(function () { });
             btnPlayPause.innerHTML = '<span class="material-symbols-rounded">pause</span>';
         } else {
             audio.pause();
@@ -225,12 +225,12 @@ if (btnPlayPause && audio) {
 
 var btnNext = document.getElementById('btnNext');
 var btnPrev = document.getElementById('btnPrev');
-if (btnNext) btnNext.onclick = function() { playSong(currentIndex + 1); };
-if (btnPrev) btnPrev.onclick = function() { playSong(currentIndex - 1); };
+if (btnNext) btnNext.onclick = function () { playSong(currentIndex + 1); };
+if (btnPrev) btnPrev.onclick = function () { playSong(currentIndex - 1); };
 
 var btnLoop = document.getElementById('btnLoop');
 if (btnLoop) {
-    btnLoop.onclick = function() {
+    btnLoop.onclick = function () {
         isLooping = !isLooping;
         if (isLooping) {
             btnLoop.classList.add('active');
@@ -241,10 +241,10 @@ if (btnLoop) {
 }
 
 if (audio) {
-    audio.onended = function() {
+    audio.onended = function () {
         if (isLooping) {
             audio.currentTime = 0;
-            audio.play().catch(function() { });
+            audio.play().catch(function () { });
         } else {
             playSong(currentIndex + 1);
         }
@@ -252,9 +252,9 @@ if (audio) {
 }
 
 if (searchInput) {
-    searchInput.oninput = function() {
+    searchInput.oninput = function () {
         var q = (searchInput.value || '').toLowerCase();
-        currentPlaylist = allSongs.filter(function(s) {
+        currentPlaylist = allSongs.filter(function (s) {
             return (s.title || '').toLowerCase().indexOf(q) !== -1 ||
                    (s.artist || '').toLowerCase().indexOf(q) !== -1;
         });
@@ -275,7 +275,7 @@ if (searchInput) {
             document.body.classList.add('win-type-body');
         } else {
             // Fallback just in case the script runs before the body is parsed
-            document.addEventListener("DOMContentLoaded", function() {
+            document.addEventListener("DOMContentLoaded", function () {
                 document.body.classList.add('win-type-body');
             });
         }
@@ -303,56 +303,44 @@ if (searchInput) {
                     if (!xml) xml = new DOMParser().parseFromString(xhr.responseText, 'text/xml');
 
                     var items = xml.getElementsByTagName('song');
-                    var tileUpdater = Notifications.TileUpdateManager.createTileUpdaterForApplication();
+                    var tileUpdater = Windows.UI.Notifications.TileUpdateManager.createTileUpdaterForApplication();
                     var tileType = Notifications.TileTemplateType;
 
                     tileUpdater.enableNotificationQueue(true);
                     tileUpdater.clear();
 
                     // Limit to 5 songs (Windows maximum for cycling)
-                    var limit = Math.min(items.length, 5);
+                    var limit = Math.min(shuffledSongs.length, 5);
 
                     for (var i = 0; i < limit; i++) {
-                        var s = items[i];
-                        
-                        // Standard Web DOM parsing for the XHR response (bracket notation is fine here)
-                        var titleNode = s.getElementsByTagName('title')[0];
-                        var artistNode = s.getElementsByTagName('artist')[0];
-                        var artNode = s.getElementsByTagName('albumArt')[0];
-                        
-                        var song = {
-                            title: titleNode ? titleNode.textContent : "",
-                            artist: artistNode ? artistNode.textContent : "",
-                            albumArt: artNode ? artNode.textContent : "placeholder.png"
-                        };
+                        var song = shuffledSongs[i];
+                        var tileType = Windows.UI.Notifications.TileTemplateType;
 
                         // 1. Get Wide Template (310x150)
-                        var wideXml = Notifications.TileUpdateManager.getTemplateContent(tileType.tileWide310x150ImageAndText01);
+                        var wideXml = Windows.UI.Notifications.TileUpdateManager.getTemplateContent(tileType.tileWide310x150ImageAndText01);
                         var wideText = wideXml.getElementsByTagName("text");
                         var wideImg = wideXml.getElementsByTagName("image");
 
-                        // Fix: UWP XmlNodeList requires .item(index) instead of [index]
-                        if (wideText.length > 0) wideText.item(0).innerText = song.title;
-                        if (wideText.length > 1) wideText.item(1).innerText = song.artist;
-                        if (wideImg.length > 0) wideImg.item(0).setAttribute("src", song.albumArt);
+                        // Safety: Only append if the nodes actually exist
+                        if (wideText[0]) wideText[0].appendChild(wideXml.createTextNode(song.title));
+                        if (wideText[1]) wideText[1].appendChild(wideXml.createTextNode(song.artist));
+                        if (wideImg[0]) wideImg[0].setAttribute("src", song.albumArt);
 
                         // 2. Get Square Template (150x150)
-                        var squareXml = Notifications.TileUpdateManager.getTemplateContent(tileType.tileSquare150x150PeekImageAndText02);
+                        var squareXml = Windows.UI.Notifications.TileUpdateManager.getTemplateContent(tileType.tileSquare150x150PeekImageAndText02);
                         var squareText = squareXml.getElementsByTagName("text");
                         var squareImg = squareXml.getElementsByTagName("image");
 
-                        if (squareText.length > 0) squareText.item(0).innerText = song.title;
-                        if (squareText.length > 1) squareText.item(1).innerText = song.artist;
-                        if (squareImg.length > 0) squareImg.item(0).setAttribute("src", song.albumArt);
+                        if (squareText[0]) squareText[0].appendChild(squareXml.createTextNode(song.title));
+                        if (squareText[1]) squareText[1].appendChild(squareXml.createTextNode(song.artist));
+                        if (squareImg[0]) squareImg[0].setAttribute("src", song.albumArt);
 
                         // 3. Combine Square into Wide so the Tile supports both sizes
                         var bindingNode = wideXml.importNode(squareXml.getElementsByTagName("binding").item(0), true);
                         wideXml.getElementsByTagName("visual").item(0).appendChild(bindingNode);
 
-                        // 4. Send to Tile with unique tag to prevent overwriting
-                        var tileNotification = new Notifications.TileNotification(wideXml);
-                        tileNotification.tag = "song_" + i;
-
+                        // 4. Send to Tile
+                        var tileNotification = new Windows.UI.Notifications.TileNotification(wideXml);
                         tileUpdater.update(tileNotification);
                     }
                 } catch (e) {
@@ -613,14 +601,14 @@ function initAudioEngine() {
 
         dryGain.gain.value = 1;
         wetGain.gain.value = 0;
-        
+
         reverbNode = audioCtx.createConvolver();
         reverbNode.buffer = createImpulseResponse(3, 4);
-        
+
         lastNode.connect(dryGain);
         lastNode.connect(reverbNode);
         reverbNode.connect(wetGain);
-        
+
         dryGain.connect(audioCtx.destination);
         wetGain.connect(audioCtx.destination);
     } catch (e) { console.error("Audio Engine Init Failed:", e); }
@@ -631,31 +619,31 @@ function updatePlayback() {
     if (!audio) return;
     var speed = parseFloat(document.getElementById('speedSlider').value);
     var lock = document.getElementById('preservePitch').checked;
-    
+
     audio.playbackRate = speed;
     // Fix for UWP and Chromium
     audio.preservesPitch = lock;
-    audio.msPreservesPitch = lock; 
-    
+    audio.msPreservesPitch = lock;
+
     document.getElementById('speedLabel').innerText = speed.toFixed(2) + 'x';
 }
 
 document.getElementById('speedSlider').oninput = updatePlayback;
 document.getElementById('preservePitch').onchange = updatePlayback;
 
-document.getElementById('drySlider').oninput = function() { if(dryGain) dryGain.gain.value = this.value; };
-document.getElementById('wetSlider').oninput = function() { if(wetGain) wetGain.gain.value = this.value; };
+document.getElementById('drySlider').oninput = function () { if (dryGain) dryGain.gain.value = this.value; };
+document.getElementById('wetSlider').oninput = function () { if (wetGain) wetGain.gain.value = this.value; };
 
 // Bind EQ Sliders
 for (var i = 0; i < 10; i++) {
-    (function(idx) {
+    (function (idx) {
         var s = document.getElementById('eqSlider' + idx);
-        if (s) s.oninput = function() { if(filters[idx]) filters[idx].gain.value = this.value; };
+        if (s) s.oninput = function () { if (filters[idx]) filters[idx].gain.value = this.value; };
     })(i);
 }
 
 // Critical: Resume AudioContext on first play (Chromium requirement)
-audio.addEventListener('play', function() {
+audio.addEventListener('play', function () {
     initAudioEngine();
     if (audioCtx && audioCtx.state === 'suspended') audioCtx.resume();
 });
