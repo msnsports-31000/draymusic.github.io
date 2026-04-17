@@ -45,6 +45,15 @@ body.winxpclient #body-bg {
     display: none;
 }
 
+body.win-type-body * {
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+}
+
+body.win-type-body .uwpdisable {
+    display: none;
+}
+
 body.widgetapp .app-header {
     padding: 0px 10px;
     -webkit-app-region: drag;
