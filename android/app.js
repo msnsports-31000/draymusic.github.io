@@ -11,6 +11,22 @@ var currentIndex = -1;
 var isLooping = false;
 var pendingSeekPercent = null;
 
+var eqPane = document.getElementById('eqPane');
+var btnEQ = document.getElementById('btnEQ');
+var btnCloseEQ = document.getElementById('btnCloseEQ');
+
+if (btnEQ && eqPane) {
+    btnEQ.onclick = function() {
+        eqPane.classList.add('open');
+    };
+}
+
+if (btnCloseEQ && eqPane) {
+    btnCloseEQ.onclick = function() {
+        eqPane.classList.remove('open');
+    };
+}
+
 function clampPercent(p) {
     var n = Number(p);
     if (isNaN(n)) return 0;
@@ -552,135 +568,81 @@ if (searchInput) {
     }
 })();
 
-/* ===== Audio Settings (EQ, Pitch, Reverb) Integration ===== */
-var audioCtx;
-var track;
-var eqBands = [];
-var convolver;
-var dryGain;
-var wetGain;
-var audioInitialized = false;
+/* ===== Equalizer & Audio Processing ===== */
+var audioCtx = null;
+var source = null;
+var filters = [];
 
-function initWebAudio() {
-    if (audioInitialized) return;
-    var AudioContext = window.AudioContext || window.webkitAudioContext;
-    if (!AudioContext) {
-        console.warn('Web Audio API not supported in this browser');
-        return;
-    }
+function initAudioEngine() {
+    // Only initialize once
+    if (audioCtx) return;
 
     try {
-        audioCtx = new AudioContext();
-        track = audioCtx.createMediaElementSource(audio);
+        var AudioContextClass = window.AudioContext || window.webkitAudioContext;
+        if (!AudioContextClass) return;
 
-        // 1. Setup 5-Band EQ
-        var freqs = [60, 230, 910, 3600, 14000];
-        var types = ['lowshelf', 'peaking', 'peaking', 'peaking', 'highshelf'];
-        var prevNode = track;
+        audioCtx = new AudioContextClass();
+        source = audioCtx.createMediaElementSource(audio);
 
-        for (var i = 0; i < freqs.length; i++) {
-            var eq = audioCtx.createBiquadFilter();
-            eq.type = types[i];
-            eq.frequency.value = freqs[i];
-            eq.gain.value = 0; // Flat initially
-            eqBands.push(eq);
-            prevNode.connect(eq);
-            prevNode = eq;
+        // Frequencies matching your HTML labels: 60, 230, 910, 3.6k, 14k
+        var frequencies = [60, 230, 910, 3600, 14000];
+        var lastNode = source;
+
+        for (var i = 0; i < frequencies.length; i++) {
+            var filter = audioCtx.createBiquadFilter();
+            
+            // First is bass (lowshelf), last is treble (highshelf), middle are peaking
+            if (i === 0) filter.type = 'lowshelf';
+            else if (i === frequencies.length - 1) filter.type = 'highshelf';
+            else filter.type = 'peaking';
+
+            filter.frequency.value = frequencies[i];
+            filter.gain.value = 0; // Default neutral
+
+            lastNode.connect(filter);
+            filters.push(filter);
+            lastNode = filter;
         }
 
-        // 2. Setup Reverb (Convolver) and Dry/Wet mix
-        convolver = audioCtx.createConvolver();
-        dryGain = audioCtx.createGain();
-        wetGain = audioCtx.createGain();
-
-        dryGain.gain.value = 1; // Full dry
-        wetGain.gain.value = 0; // Zero wet
-
-        // Generate a synthetic impulse response for the reverb (prevents needing external files)
-        var rate = audioCtx.sampleRate;
-        var length = rate * 2; // 2 second tail
-        var impulse = audioCtx.createBuffer(2, length, rate);
-        var left = impulse.getChannelData(0);
-        var right = impulse.getChannelData(1);
-        for (var j = 0; j < length; j++) {
-            var n = length - j;
-            left[j] = (Math.random() * 2 - 1) * Math.pow(n / length, 2) * Math.exp(-j / (rate * 0.5));
-            right[j] = (Math.random() * 2 - 1) * Math.pow(n / length, 2) * Math.exp(-j / (rate * 0.5));
-        }
-        convolver.buffer = impulse;
-
-        // 3. Connect the routing graph
-        prevNode.connect(dryGain);
-        prevNode.connect(convolver);
-        convolver.connect(wetGain);
-
-        dryGain.connect(audioCtx.destination);
-        wetGain.connect(audioCtx.destination);
-
-        audioInitialized = true;
+        // Connect the final filter to the speakers
+        lastNode.connect(audioCtx.destination);
     } catch (e) {
-        console.warn("Web Audio API setup failed:", e);
+        console.warn('Web Audio API not supported or blocked:', e);
     }
 }
 
-// Ensure audio context starts on user interaction
-if (audio) {
-    audio.addEventListener('play', function() {
-        initWebAudio();
-        if (audioCtx && audioCtx.state === 'suspended') {
-            audioCtx.resume();
-        }
-    });
-}
+// Crucial: Initialize the audio engine on the first play 
+// (Browsers block AudioContext until a user clicks Play)
+audio.addEventListener('play', function() {
+    initAudioEngine();
+    if (audioCtx && audioCtx.state === 'suspended') {
+        audioCtx.resume();
+    }
+}, { once: true });
 
-// Side Pane UI Toggle
-var btnEQ = document.getElementById('btnEQ');
-var eqPane = document.getElementById('eqPane');
-var btnCloseEQ = document.getElementById('btnCloseEQ');
-
-if (btnEQ && eqPane) {
-    btnEQ.onclick = function() { eqPane.classList.add('open'); };
-}
-if (btnCloseEQ && eqPane) {
-    btnCloseEQ.onclick = function() { eqPane.classList.remove('open'); };
-}
-
-// Wire EQ Sliders
-for (var k = 0; k < 5; k++) {
+// Link EQ Sliders (eqSlider0 to eqSlider4)
+for (var i = 0; i < 5; i++) {
     (function(index) {
         var slider = document.getElementById('eqSlider' + index);
         if (slider) {
-            slider.addEventListener('input', function(e) {
-                if (eqBands[index]) eqBands[index].gain.value = parseFloat(e.target.value);
-            });
+            slider.oninput = function() {
+                if (filters[index]) {
+                    filters[index].gain.value = parseFloat(this.value);
+                }
+            };
         }
-    })(k);
+    })(i);
 }
 
-// Wire Speed / Pitch Slider
+// Speed Slider Logic
 var speedSlider = document.getElementById('speedSlider');
 var speedLabel = document.getElementById('speedLabel');
-if (speedSlider) {
-    speedSlider.addEventListener('input', function(e) {
-        var val = parseFloat(e.target.value);
-        if (audio) audio.playbackRate = val;
+if (speedSlider && audio) {
+    speedSlider.oninput = function() {
+        var val = parseFloat(this.value);
+        audio.playbackRate = val;
         if (speedLabel) speedLabel.innerText = val.toFixed(2) + 'x';
-    });
-}
-
-// Wire Reverb Sliders
-var drySlider = document.getElementById('drySlider');
-if (drySlider) {
-    drySlider.addEventListener('input', function(e) {
-        if (dryGain) dryGain.gain.value = parseFloat(e.target.value);
-    });
-}
-
-var wetSlider = document.getElementById('wetSlider');
-if (wetSlider) {
-    wetSlider.addEventListener('input', function(e) {
-        if (wetGain) wetGain.gain.value = parseFloat(e.target.value);
-    });
+    };
 }
 
 loadMusic();
