@@ -610,6 +610,10 @@ function initAudioEngine() {
         // Reverb Routing
         dryGain = audioCtx.createGain();
         wetGain = audioCtx.createGain();
+
+        dryGain.gain.value = 1;
+        wetGain.gain.value = 0;
+        
         reverbNode = audioCtx.createConvolver();
         reverbNode.buffer = createImpulseResponse(3, 4);
         
