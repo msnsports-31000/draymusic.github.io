@@ -568,81 +568,116 @@ if (searchInput) {
     }
 })();
 
-/* ===== Equalizer & Audio Processing ===== */
+/* ===== Advanced Audio Engine ===== */
 var audioCtx = null;
 var source = null;
 var filters = [];
+var reverbNode = null;
+var dryGain = null;
+var wetGain = null;
+
+// Function to create a synthetic Reverb sound (Impulse Response)
+function createImpulseResponse(duration, decay) {
+    var sampleRate = audioCtx.sampleRate;
+    var length = sampleRate * duration;
+    var impulse = audioCtx.createBuffer(2, length, sampleRate);
+    for (var i = 0; i < 2; i++) {
+        var channelData = impulse.getChannelData(i);
+        for (var j = 0; j < length; j++) {
+            channelData[j] = (Math.random() * 2 - 1) * Math.pow(1 - j / length, decay);
+        }
+    }
+    return impulse;
+}
 
 function initAudioEngine() {
-    // Only initialize once
     if (audioCtx) return;
 
     try {
         var AudioContextClass = window.AudioContext || window.webkitAudioContext;
-        if (!AudioContextClass) return;
-
         audioCtx = new AudioContextClass();
         source = audioCtx.createMediaElementSource(audio);
 
-        // Frequencies matching your HTML labels: 60, 230, 910, 3.6k, 14k
-        var frequencies = [60, 230, 910, 3600, 14000];
+        // 1. Setup 10-Band EQ
+        var frequencies = [31, 62, 125, 250, 500, 1000, 2000, 4000, 8000, 16000];
         var lastNode = source;
 
         for (var i = 0; i < frequencies.length; i++) {
             var filter = audioCtx.createBiquadFilter();
-            
-            // First is bass (lowshelf), last is treble (highshelf), middle are peaking
             if (i === 0) filter.type = 'lowshelf';
             else if (i === frequencies.length - 1) filter.type = 'highshelf';
             else filter.type = 'peaking';
-
+            
             filter.frequency.value = frequencies[i];
-            filter.gain.value = 0; // Default neutral
-
+            filter.gain.value = 0;
             lastNode.connect(filter);
             filters.push(filter);
             lastNode = filter;
         }
 
-        // Connect the final filter to the speakers
-        lastNode.connect(audioCtx.destination);
+        // 2. Setup Reverb (Parallel Routing)
+        dryGain = audioCtx.createGain();
+        wetGain = audioCtx.createGain();
+        reverbNode = audioCtx.createConvolver();
+        
+        reverbNode.buffer = createImpulseResponse(2.5, 4.0); // 2.5s duration, 4.0 decay
+        dryGain.gain.value = 1;
+        wetGain.gain.value = 0;
+
+        // Routing: EQ -> Dry Gain -> Destination
+        //          EQ -> Reverb -> Wet Gain -> Destination
+        lastNode.connect(dryGain);
+        lastNode.connect(reverbNode);
+        reverbNode.connect(wetGain);
+
+        dryGain.connect(audioCtx.destination);
+        wetGain.connect(audioCtx.destination);
+
     } catch (e) {
-        console.warn('Web Audio API not supported or blocked:', e);
+        console.warn('Audio Engine Error:', e);
     }
 }
 
-// Crucial: Initialize the audio engine on the first play 
-// (Browsers block AudioContext until a user clicks Play)
-audio.addEventListener('play', function() {
-    initAudioEngine();
-    if (audioCtx && audioCtx.state === 'suspended') {
-        audioCtx.resume();
-    }
-}, { once: true });
-
-// Link EQ Sliders (eqSlider0 to eqSlider4)
-for (var i = 0; i < 5; i++) {
+// Event Listeners for 10 EQ Sliders
+for (var i = 0; i < 10; i++) {
     (function(index) {
         var slider = document.getElementById('eqSlider' + index);
         if (slider) {
             slider.oninput = function() {
-                if (filters[index]) {
-                    filters[index].gain.value = parseFloat(this.value);
-                }
+                if (filters[index]) filters[index].gain.value = parseFloat(this.value);
             };
         }
     })(i);
 }
 
-// Speed Slider Logic
+// Reverb Sliders
+document.getElementById('drySlider').oninput = function() {
+    if (dryGain) dryGain.gain.value = parseFloat(this.value);
+};
+document.getElementById('wetSlider').oninput = function() {
+    if (wetGain) wetGain.gain.value = parseFloat(this.value);
+};
+
+// Split Speed and Pitch
 var speedSlider = document.getElementById('speedSlider');
-var speedLabel = document.getElementById('speedLabel');
-if (speedSlider && audio) {
-    speedSlider.oninput = function() {
-        var val = parseFloat(this.value);
-        audio.playbackRate = val;
-        if (speedLabel) speedLabel.innerText = val.toFixed(2) + 'x';
-    };
+var preservePitch = document.getElementById('preservePitch');
+
+function updatePlayback() {
+    if (!audio) return;
+    audio.playbackRate = parseFloat(speedSlider.value);
+    // This is the magic property that splits speed from pitch
+    audio.preservesPitch = preservePitch.checked; 
+    
+    document.getElementById('speedLabel').innerText = parseFloat(speedSlider.value).toFixed(2) + 'x';
 }
+
+speedSlider.oninput = updatePlayback;
+preservePitch.onchange = updatePlayback;
+
+// Start Audio Context on user interaction
+audio.addEventListener('play', function() {
+    initAudioEngine();
+    if (audioCtx && audioCtx.state === 'suspended') audioCtx.resume();
+}, { once: true });
 
 loadMusic();
