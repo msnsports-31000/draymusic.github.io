@@ -117,6 +117,10 @@ body.widgetapp #body-bg {
     transform: scale(1.15);
 }
 
+body.widgetapp .wigdisable {
+    display: none;
+}
+
 #body-bg {
     position: fixed;
     top: 0;
