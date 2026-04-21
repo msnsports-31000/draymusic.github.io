@@ -1,30 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <music>
   <song>
-    <title>Midnight City Pulse</title>
-    <artist>Neon Dreams</artist>
-    <albumArt/>
-    <url>https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3</url>
-  </song>
-  <song>
-    <title>Golden Era Beats</title>
-    <artist>The Vinyl Project</artist>
-    <albumArt/>
-    <url>https://www.soundhelix.com/examples/mp3/SoundHelix-Song-2.mp3</url>
-  </song>
-  <song>
-    <title>Digital Rain</title>
-    <artist>Binary Solo</artist>
-    <albumArt/>
-    <url>https://www.soundhelix.com/examples/mp3/SoundHelix-Song-3.mp3</url>
-  </song>
-  <song>
-    <title>Skyline Horizon</title>
-    <artist>Cloud Chasers</artist>
-    <albumArt/>
-    <url>https://www.soundhelix.com/examples/mp3/SoundHelix-Song-4.mp3</url>
-  </song>
-  <song>
     <title>White Balcony</title>
     <artist>Chris R, Lillo</artist>
     <albumArt>https://draydenthemiiyt-maker.github.io/draymusic.github.io/portada%203000.jpg</albumArt>
