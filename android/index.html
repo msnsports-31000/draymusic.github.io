@@ -8,7 +8,6 @@
     <title>DrayMusic</title>
     <link rel="manifest" href="manifest.json">
     <link rel="stylesheet" href="style.css">
-    <link href="google.css" rel="stylesheet">
     <link href="https://10storedraydenyt.vercel.app/w8incss/style.css" rel="stylesheet">
     <style>
         #errorScreen {
@@ -73,8 +72,8 @@
     <header class="app-header">
         <h1>DrayMusic</h1>
         <div class="search-pill">
-            <span class="material-symbols-rounded">search</span>
-            <input type="text" id="searchInput" placeholder="Search songs or artists...">
+            <span class="win-icon-pack"></span>
+            <input type="text" id="searchInput" placeholder="Search songs or artists">
         </div>
     </header>
     <main id="songList" class="scroll-area">
@@ -93,11 +92,11 @@
                 </div>
             </div>
             <div class="action-btns">
-                <button id="btnEQ" class="icon-btn wigdisable"><span class="material-symbols-rounded">tune 😀</span></button>
-                <button id="btnLoop" class="icon-btn"><span class="material-symbols-rounded">repeat</span></button>
-                <button id="btnPrev" class="icon-btn"><span class="material-symbols-rounded">skip_previous</span></button>
-                <button id="btnPlayPause" class="main-play-btn"><span class="material-symbols-rounded">play_arrow</span></button>
-                <button id="btnNext" class="icon-btn"><span class="material-symbols-rounded">skip_next</span></button>
+                <button id="btnEQ" class="icon-btn wigdisable"><span class="win-icon-pack"></span></button>
+                <button id="btnLoop" class="icon-btn"><span class="win-icon-pack"></span></button>
+                <button id="btnPrev" class="icon-btn"><span class="win-icon-pack"></span></button>
+                <button id="btnPlayPause" class="main-play-btn"><span class="win-icon-pack"></span></button>
+                <button id="btnNext" class="icon-btn"><span class="win-icon-pack"></span></button>
             </div>
         </div>
     </section>
@@ -113,7 +112,7 @@
     <div id="eqPane" class="side-pane">
         <div class="pane-header">
             <h2>Audio Settings</h2>
-            <button id="btnCloseEQ" class="icon-btn"><span class="material-symbols-rounded">close</span></button>
+            <button id="btnCloseEQ" class="icon-btn"><span class="win-icon-pack"></span></button>
         </div>
         <div class="pane-content">
             <div class="control-group">
@@ -142,13 +141,13 @@
                 <div class="toggle-row">
                     <label class="win-switch">
                         <input type="checkbox" id="preservePitch" checked>
-                        <span class="win-switch-label">Lock Pitch (Independent)</span>
+                        <span class="win-switch-label">Lock Pitch</span>
                     </label>
                 </div>
             </div>
 
             <div class="control-group">
-                <h3>Reverb (Environment)</h3>
+                <h3>Reverb</h3>
                 <div class="slider-row">
                     <label>Dry (Original)</label>
                     <input type="range" id="drySlider" min="0" max="1" step="0.05" value="1">
