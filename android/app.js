@@ -283,7 +283,7 @@ function playSong(index) {
     if (titleEl) titleEl.innerText = song.title; // innerText is better for old IE than textContent
     if (artistEl) artistEl.innerText = song.artist;
     if (artEl) artEl.src = song.art;
-    if (playBtn) playBtn.innerHTML = '<span class="win-icon-pack"></span>';
+    if (playBtn) playBtn.innerHTML = '<span class="material-symbols-rounded">pause</span>';
 }
 
 function playNext() { playSong(currentIndex + 1); }
@@ -294,10 +294,10 @@ if (btnPlayPause && audio) {
     btnPlayPause.onclick = function () {
         if (audio.paused) {
             safePlay(audio);
-            btnPlayPause.innerHTML = '<span class="win-icon-pack"></span>';
+            btnPlayPause.innerHTML = '<span class="material-symbols-rounded">pause</span>';
         } else {
             audio.pause();
-            btnPlayPause.innerHTML = '<span class="win-icon-pack"></span>';
+            btnPlayPause.innerHTML = '<span class="material-symbols-rounded">play_arrow</span>';
         }
     };
 }
