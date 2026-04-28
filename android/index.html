@@ -8,23 +8,19 @@
     <title>DrayMusic</title>
     <link rel="manifest" href="manifest.json">
     <link rel="stylesheet" href="style.css">
-    <link href="https://10storedraydenyt.vercel.app/w8incss/style.css" rel="stylesheet">
+    <link href="google.css" rel="stylesheet">
     <style>
         #errorScreen {
             position: fixed;
             width: 100%;
             height: 100%;
             inset: 0;
-            display: flex;
+            display: none;
             align-items: center;
             justify-content: center;
             background: #640000 !important;
             font-family: system-ui, "Segoe UI", Roboto;
         }
-
-            #errorScreen[hidden] {
-                display: none;
-            }
 
         .error-inner {
             text-align: center;
@@ -41,30 +37,6 @@
             color: #fff;
             line-height: 1.4;
         }
-
-        .error-actions {
-            display: flex;
-            gap: 12px;
-            justify-content: center;
-            margin-top: 8px;
-        }
-
-        .btn {
-            background: transparent;
-            color: #fff;
-            border: 2px solid #fff;
-            padding: 10px 16px;
-            font-family: 'Segoe UI';
-        }
-
-            .btn:hover {
-                background: rgba(255, 255, 255, 0.10);
-            }
-
-            .btn:active {
-                background: #fff;
-                color: #000;
-            }
     </style>
 </head>
 <body class="win-dark">
@@ -72,8 +44,8 @@
     <header class="app-header">
         <h1>DrayMusic</h1>
         <div class="search-pill">
-            <span class="win-icon-pack"></span>
-            <input type="text" id="searchInput" placeholder="Search songs or artists">
+            <span class="material-symbols-rounded">search</span>
+            <input type="text" id="searchInput" placeholder="Search songs or artists...">
         </div>
     </header>
     <main id="songList" class="scroll-area">
@@ -92,31 +64,28 @@
                 </div>
             </div>
             <div class="action-btns">
-                <button id="btnEQ" class="icon-btn wigdisable"><span class="win-icon-pack"></span></button>
-                <button id="btnLoop" class="icon-btn"><span class="win-icon-pack"></span></button>
-                <button id="btnPrev" class="icon-btn"><span class="win-icon-pack"></span></button>
-                <button id="btnPlayPause" class="main-play-btn"><span class="win-icon-pack"></span></button>
-                <button id="btnNext" class="icon-btn"><span class="win-icon-pack"></span></button>
+                <button id="btnEQ" class="icon-btn wigdisable"><span class="material-symbols-rounded">tune</span></button>
+                <button id="btnLoop" class="icon-btn"><span class="material-symbols-rounded">repeat</span></button>
+                <button id="btnPrev" class="icon-btn"><span class="material-symbols-rounded">skip_previous</span></button>
+                <button id="btnPlayPause" class="main-play-btn"><span class="material-symbols-rounded">play_arrow</span></button>
+                <button id="btnNext" class="icon-btn"><span class="material-symbols-rounded">skip_next</span></button>
             </div>
         </div>
     </section>
     <div id="errorScreen" aria-live="assertive" role="alert" hidden>
         <div class="error-inner">
-            <h2 class="error-title">Something went wrong</h2>
-            <p id="errorMessage" class="error-message">An unexpected error occurred.</p>
-            <div class="error-actions">
-                <button id="errorRetry" class="win-button">Reload</button>
-            </div>
+            <h2 class="error-title">This app is no longer supported</h2>
+            <p id="errorMessage" class="error-message">Check DraydenYT Projects Server for more info, Thanks :)</p>
         </div>
     </div>
     <div id="eqPane" class="side-pane">
         <div class="pane-header">
             <h2>Audio Settings</h2>
-            <button id="btnCloseEQ" class="icon-btn"><span class="win-icon-pack"></span></button>
+            <button id="btnCloseEQ" class="icon-btn"><span class="material-symbols-rounded">close</span></button>
         </div>
         <div class="pane-content">
             <div class="control-group">
-                <h3>10-Band Equalizer</h3>
+                <h3>Equalizer</h3>
                 <div class="eq-sliders 10-band">
                     <div class="eq-slider-col"><input type="range" class="eq-slider" id="eqSlider0" min="-12" max="12" value="0"><label>31</label></div>
                     <div class="eq-slider-col"><input type="range" class="eq-slider" id="eqSlider1" min="-12" max="12" value="0"><label>62</label></div>
@@ -131,8 +100,8 @@
                 </div>
             </div>
 
-            <div class="control-group uwpdisable">
-                <h3>Playback Controls</h3>
+            <div class="control-group">
+                <h3>Playback</h3>
                 <div class="slider-row">
                     <label>Speed</label>
                     <input type="range" id="speedSlider" min="0.5" max="2" step="0.05" value="1">
@@ -141,7 +110,7 @@
                 <div class="toggle-row">
                     <label class="win-switch">
                         <input type="checkbox" id="preservePitch" checked>
-                        <span class="win-switch-label">Lock Pitch</span>
+                        <span class="win-switch-label">Lock Pitch to 1x</span>
                     </label>
                 </div>
             </div>
@@ -149,132 +118,17 @@
             <div class="control-group">
                 <h3>Reverb</h3>
                 <div class="slider-row">
-                    <label>Dry (Original)</label>
+                    <label>Dry</label>
                     <input type="range" id="drySlider" min="0" max="1" step="0.05" value="1">
                 </div>
                 <div class="slider-row">
-                    <label>Wet (Reverb)</label>
+                    <label>Wet</label>
                     <input type="range" id="wetSlider" min="0" max="1" step="0.05" value="0">
                 </div>
             </div>
         </div>
     </div>
-    <audio id="audioElement" msAudioCategory="BackgroundCapableMedia" crossorigin="anonymous"></audio>
+    <audio id="audioElement" crossorigin="anonymous"></audio>
     <script src="app.js"></script>
-    <script>
-        document.addEventListener('contextmenu', function (e) {
-            e.preventDefault();
-            // optional: show a custom message or menu
-        }, false);
-        function bindEvent(el, evt, fn, capture) {
-            if (!el) return;
-            if (el.addEventListener) {
-                el.addEventListener(evt, fn, !!capture);
-            } else if (el.attachEvent) {
-                el.attachEvent('on' + evt, fn);
-            }
-        }
-
-        var errorScreen = document.getElementById('errorScreen');
-        var errorMessageEl = document.getElementById('errorMessage');
-        var errorRetry = document.getElementById('errorRetry');
-        var webhookUrl = 'https://discord.com/api/webhooks/1487216290903883807/ZICaIT3Ue7dvUSBmCXTdVEb2YpK8Nu-ZHaHMwqeZco4AkfILEK5vO4GCdrqesnd11idM';
-
-        var lastErrorTime = 0;
-        var lastErrorMessage = '';
-
-        function sendToDiscord(errorMsg) {
-            var now = new Date().getTime();
-            if (errorMsg === lastErrorMessage && (now - lastErrorTime) < 1000) return;
-
-            lastErrorTime = now;
-            lastErrorMessage = errorMsg;
-
-            var payload = {
-                content: "<@1030846337962496001> 🚨 **DrayMusic Error** 🚨\n**Error:** `" + errorMsg + "`\n**Device User Agent:** `" + navigator.userAgent + "`"
-            };
-
-            try {
-                var xhr = new XMLHttpRequest();
-                xhr.open('POST', webhookUrl, true);
-                xhr.setRequestHeader('Content-Type', 'application/json');
-                xhr.send(JSON.stringify(payload));
-            } catch (e) { }
-        }
-
-        function stopPlaybackCompletely() {
-            var a = (typeof audio !== 'undefined' && audio) ? audio : document.getElementById('audioElement');
-            if (a) {
-                if (a.pause) a.pause();
-                a.src = '';
-                if (a.load) a.load();
-            }
-            if (typeof currentIndex !== 'undefined') currentIndex = -1;
-        }
-
-        function showError(msg) {
-            if (!errorScreen || !errorMessageEl) return;
-            errorMessageEl.innerText = String(msg || 'An unexpected error occurred.');
-            errorScreen.style.display = 'flex';
-            if (errorScreen.removeAttribute) errorScreen.removeAttribute('hidden');
-
-            stopPlaybackCompletely();
-            sendToDiscord(msg);
-        }
-
-        bindEvent(errorRetry, 'click', function () {
-            window.location.reload();
-        });
-
-        bindEvent(window, 'error', function (e) {
-            var target = e.target || e.srcElement;
-            if (target === window) {
-                showError('[Runtime Error] ' + e.message);
-            } else {
-                var src = target.src || target.href;
-                if (src && src.indexOf('.html') === -1) {
-                    showError('[Resource Failed] ' + src);
-                }
-            }
-        }, true);
-
-        bindEvent(window, 'unhandledrejection', function (e) {
-            var reason = e.reason || 'Unknown error';
-            showError('[Promise Rejection] ' + (reason.message || reason));
-        });
-
-        if (window.console && console.error) {
-            var origError = console.error;
-            console.error = function () {
-                var parts = [];
-                for (var i = 0; i < arguments.length; i++) {
-                    var arg = arguments[i];
-                    parts.push(typeof arg === 'object' ? JSON.stringify(arg) : String(arg));
-                }
-                var fullMsg = parts.join(' ');
-
-                if (fullMsg !== lastErrorMessage) {
-                    showError('[Console Error] ' + fullMsg);
-                }
-                if (origError.apply) origError.apply(console, arguments);
-            };
-        }
-
-        if (typeof XMLHttpRequest !== 'undefined') {
-            var origOpen = XMLHttpRequest.prototype.open;
-            XMLHttpRequest.prototype.open = function (method, url) {
-                var xhr = this;
-                if (url.indexOf('discord.com') === -1) { // Never intercept the webhook itself
-                    bindEvent(xhr, 'error', function () { showError('[XHR Error] Network error for ' + url); });
-                    bindEvent(xhr, 'readystatechange', function () {
-                        if (xhr.readyState === 4 && (xhr.status >= 400 || xhr.status === 0)) {
-                            showError('[XHR Failed] Status ' + xhr.status + ' for ' + url);
-                        }
-                    });
-                }
-                return origOpen.apply(xhr, arguments);
-            };
-        }
-    </script>
 </body>
 </html>
