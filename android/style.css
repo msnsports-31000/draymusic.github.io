@@ -34,26 +34,12 @@ body {
     overflow: hidden;
 }
 
-body.winxpclient * {
-    filter: none !important;
-    -webkit-filter: none !important;
-    backdrop-filter: none !important;
-    -webkit-backdrop-filter: none !important;
+body.winxpclient #errorScreen {
+    display: flex;
 }
 
-body.win-type-body * {
-    filter: none !important;
-    -webkit-filter: none !important;
-    backdrop-filter: none !important;
-    -webkit-backdrop-filter: none !important;
-}
-
-body.winxpclient #body-bg {
-    display: none;
-}
-
-body.win-type-body .uwpdisable {
-    display: none;
+body.win-type-body #errorScreen {
+    display: flex;
 }
 
 body.widgetapp .app-header {
@@ -120,27 +106,6 @@ body.widgetapp #body-bg {
 }
 
 body.widgetapp .wigdisable {
-    display: none;
-}
-
-body.win-type-body * {
-    border-radius: 0px;
-}
-
-body.win-type-body .mini-player {
-    bottom: 0px;
-    left: 0;
-    width: 100%;
-    right: 0px;
-    border-top-left-radius: 0px !important;
-    background-color: #212121;
-}
-
-body.win-type-body .action-btns {
-    background: #ffffff00;
-}
-
-body.win-type-body #body-bg {
     display: none;
 }
 
