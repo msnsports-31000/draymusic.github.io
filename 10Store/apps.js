@@ -91,7 +91,7 @@
                 '</div>';
 
             wrapper.onclick = (function (appId) {
-                return function () { window.location.href = 'app.html?id=' + appId; };
+                return function () { window.location.href = `${pagehosturi}/app.html?id=${encodeURIComponent(appId)}`;
             })(id);
 
             wrapper.appendChild(card);
