@@ -1,4 +1,4 @@
-﻿(function () {
+(function () {
     "use strict";
 
     function getQueryParam(name) {
@@ -11,11 +11,28 @@
     var appId = getQueryParam('id');
 
     function loadAppData() {
-        console.log("Fetching App Data...");
+        console.log("Fetching App Data via XMLHttpRequest...");
 
-        WinJS.xhr({
-            url: `${server}`,
-        }).then(function (res) {
+        var getApps = new Promise(function (resolve, reject) {
+            var xhr = new XMLHttpRequest();
+            xhr.open("GET", server, true);
+
+            xhr.onload = function () {
+                if (xhr.status >= 200 && xhr.status < 300) {
+                    resolve({ responseText: xhr.responseText });
+                } else {
+                    reject(new Error("HTTP Error: " + xhr.status));
+                }
+            };
+
+            xhr.onerror = function () {
+                reject(new Error("Network request failed"));
+            };
+
+            xhr.send();
+        });
+
+        getApps.then(function (res) {
             try {
                 var parser = new DOMParser();
                 var xml = parser.parseFromString(res.responseText, "text/xml");
@@ -37,8 +54,10 @@
                 }
 
             } catch (err) {
-                console.error(err);
+                console.error("Error parsing app data:", err);
             }
+        }).catch(function (err) {
+            console.error("Request failed:", err);
         });
     }
 
@@ -61,20 +80,19 @@
             return false;
         }
 
-        var screenshots = [];
-
         function isVideoUrl(url) {
             if (!url) return false;
             url = url.trim().toLowerCase();
             return url.endsWith(".mp4") || url.indexOf(".mp4?") !== -1;
         }
 
+        var screenshots = [];
+
         for (var s = 1; s <= 5 && screenshots.length < 5; s++) {
             var tagName = "screenshot" + s;
             var el = app.getElementsByTagName(tagName)[0];
             if (el) {
                 var url = (el.textContent || el.getAttribute("src") || "").trim();
-
                 if (isValidImageUrl(url) || isVideoUrl(url)) {
                     screenshots.push(url);
                 }
@@ -85,8 +103,7 @@
             var generic = app.getElementsByTagName("screenshot");
             for (var i = 0; i < generic.length && screenshots.length < 5; i++) {
                 var url2 = (generic[i].textContent || generic[i].getAttribute("src") || "").trim();
-
-                if (isValidImageUrl(url2) || isYouTubeUrl(url2)) {
+                if (isValidImageUrl(url2) || isVideoUrl(url2)) {
                     if (screenshots.indexOf(url2) === -1) {
                         screenshots.push(url2);
                     }
@@ -99,20 +116,18 @@
             '<img src="' + icon + '" class="app-logo-big" alt="App icon">' +
             '<div class="app-info-right">' +
             '<div class="app-title">' + name + '</div>' +
-            '<a class="app-publisher" href="apps.html?search=' + encodeURIComponent(pub) + '">' + pub + '</a>' +
+            '<a class="app-publisher" href="' + pagehosturi + '/apps.html?search=' + encodeURIComponent(pub) + '">' + pub + '</a>' +
             '<div class="app-version">Version ' + version + '</div>' +
             '<div id="dl-container">' +
             '<button class="win-button btn-download" id="dl-btn">Download</button>' +
             '<div id="progress-wrapper" style="display:none; width:100%;">' +
-            '<progress id="dl-progress"></progress>' +
-            '<div id="progress-text">Downloading...</div>' +
+            '<progress id="dl-progress" value="0" max="100"></progress>' +
+            '<div id="progress-text">Connecting...</div>' +
             '</div>' +
             '</div>' +
             '<div class="app-description">' + desc + '</div>' +
             '</div>' +
-            '</div>';
-
-        html +=
+            '</div>' +
             '<section class="app-screenshots" aria-label="Screenshots">' +
             '<div class="screenshots-inner">' +
             '<h2 class="screenshots-title">Screenshots</h2>' +
@@ -142,54 +157,25 @@
             dlBtn.onclick = function () {
                 var btn = this;
                 var progressWrapper = document.getElementById("progress-wrapper");
-                var progressBar = document.getElementById("dl-progress");
-                var progressText = document.getElementById("progress-text");
 
                 btn.disabled = true;
                 progressWrapper.style.display = "block";
 
-                showNotification(name, "Starting download...");
+                var messagePayload = {
+                    action: "downloadApp",
+                    appName: name,
+                    packageUrl: packageUrl
+                };
 
-                sendDiscordNotification(name, function () {
-                    try {
-                        var uri = new Windows.Foundation.Uri(packageUrl);
-                        var downloader = new Windows.Networking.BackgroundTransfer.BackgroundDownloader();
-
-                        Windows.Storage.ApplicationData.current.localCacheFolder.createFileAsync(name + ".appx", Windows.Storage.CreationCollisionOption.replaceExisting)
-                            .then(function (file) {
-                                var download = downloader.createDownload(uri, file);
-
-                                return download.startAsync().done(function () {
-                                    progressBar.value = 100;
-                                    progressText.innerText = "Opening installer...";
-                                    showNotification(name, "Downloaded! Opening package...");
-                                    Windows.System.Launcher.launchFileAsync(file);
-
-                                    setTimeout(function () {
-                                        progressWrapper.style.display = "none";
-                                        btn.disabled = false;
-                                        btn.innerText = "Download";
-                                    }, 7000);
-
-                                }, function (error) {
-                                    progressWrapper.style.display = "none";
-                                    btn.disabled = false;
-                                }, function (progress) {
-                                    var percent = (progress.bytesReceived / progress.totalBytesToReceive) * 100;
-                                    if (!isNaN(percent)) {
-                                        progressBar.value = percent;
-                                        progressText.innerText = Math.floor(percent) + "%";
-                                    }
-                                });
-                            });
-                    } catch (e) {
-                        window.open(packageUrl, '_blank');
-                        setTimeout(function () {
-                            if (progressWrapper) progressWrapper.style.display = "none";
-                            btn.disabled = false;
-                        }, 7000);
-                    }
-                });
+                try {
+                    window.external.notify(JSON.stringify(messagePayload));
+                } catch (e) {
+                    window.open(packageUrl, '_blank');
+                    setTimeout(function () {
+                        progressWrapper.style.display = "none";
+                        btn.disabled = false;
+                    }, 5000);
+                }
             };
         }
 
@@ -204,7 +190,6 @@
             var items = [];
             for (var k = 0; k < screenshots.length; k++) {
                 var raw = screenshots[k];
-
                 if (isVideoUrl(raw)) {
                     items.push({ type: "video", url: raw });
                 } else {
@@ -223,6 +208,7 @@
             var nextBtn = document.getElementById("nextBtn");
             var thumbsContainer = document.getElementById("carouselThumbs");
             var videoEl = document.createElement("video");
+
             videoEl.id = "carouselVideo";
             videoEl.className = "carousel-frame";
             videoEl.style.cssText = "display:none; width:100%; height:100%; background:#000;";
@@ -262,9 +248,7 @@
                 if (item.type === "image") {
                     setImageWithFade(viewerImg, item.url);
                     viewerImg.style.display = "block";
-                }
-
-                else if (item.type === "video") {
+                } else if (item.type === "video") {
                     videoEl.src = item.url;
                     videoEl.style.display = "block";
                     videoEl.play();
@@ -292,16 +276,9 @@
                 }
             }
 
+            prevBtn.addEventListener("click", function () { showIndex(currentIndex - 1); });
+            nextBtn.addEventListener("click", function () { showIndex(currentIndex + 1); });
 
-            // Prev/Next handlers
-            prevBtn.addEventListener("click", function () {
-                showIndex(currentIndex - 1);
-            });
-            nextBtn.addEventListener("click", function () {
-                showIndex(currentIndex + 1);
-            });
-
-            // Populate thumbnails
             for (var m = 0; m < items.length; m++) {
                 (function (idx) {
                     var thumbWrap = document.createElement("div");
@@ -311,14 +288,12 @@
                     thumbWrap.setAttribute("tabindex", "0");
 
                     var img = document.createElement("img");
-
                     if (items[idx].type === "image") {
                         img.src = items[idx].url;
                     } else {
                         img.src = "https://www.freepnglogos.com/uploads/youtube-logo-hd-8.png";
                         img.style.objectFit = "contain";
                     }
-
                     img.alt = "Screenshot " + (idx + 1);
 
                     thumbWrap.appendChild(img);
@@ -331,7 +306,6 @@
                 })(m);
             }
 
-            // Preload images
             for (var p = 0; p < items.length; p++) {
                 if (items[p].type === "image") {
                     var pre = new Image();
@@ -339,7 +313,6 @@
                 }
             }
 
-            // Show initial
             showIndex(0);
 
         } catch (ex) {
@@ -347,41 +320,10 @@
         }
     }
 
-
-    // --- 4. HELPERS ---
-    function showNotification(title, body) {
-        try {
-            var notifications = Windows.UI.Notifications;
-            var template = notifications.ToastTemplateType.toastText02;
-            var toastXml = notifications.ToastNotificationManager.getTemplateContent(template);
-            var textNodes = toastXml.getElementsByTagName("text");
-            textNodes[0].appendChild(toastXml.createTextNode(title));
-            textNodes[1].appendChild(toastXml.createTextNode(body));
-            var toast = new notifications.ToastNotification(toastXml);
-            notifications.ToastNotificationManager.createToastNotifier().show(toast);
-        } catch (e) {
-            console.error("Notifications only work in UWP container", e);
-        }
-    }
-
-    function sendDiscordNotification(appName, callback) {
-        var webhook = "https://discord.com/api/webhooks/1472961404528099527/L9PAUtmL0kPoZsIePkLEUu4G-yVKbDsxlW15F98eTS2QW1DB58saGaIG2vreheFWyINA";
-        var payload = JSON.stringify({ content: "**" + appName + "** was downloaded!" });
-        var xhr = new XMLHttpRequest();
-        xhr.open("POST", webhook, true);
-        xhr.setRequestHeader("Content-Type", "application/json");
-        xhr.onreadystatechange = function () {
-            if (xhr.readyState === 4) { callback(); }
-        };
-        xhr.onerror = function () { callback(); };
-        xhr.send(payload);
-    }
-
     function getVal(parent, tag) {
         var el = parent.getElementsByTagName(tag)[0];
         return el ? el.textContent : "";
     }
 
-    // Start
     if (appId) { loadAppData(); }
 })();
