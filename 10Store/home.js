@@ -131,7 +131,7 @@
 
             slide.onclick = function () {
                 var id = app.getAttribute && app.getAttribute("id");
-                if (id) window.location.href = 'app.html?id=' + encodeURIComponent(id);
+                if (id) window.location.href = `${pagehosturi}/app.html?id=${encodeURIComponent(id)}`;
             };
 
             heroWrap.appendChild(slide);
@@ -260,7 +260,7 @@
                 '</div>';
 
             wrapper.onclick = function () {
-                window.location.href = 'app.html?id=' + encodeURIComponent(id);
+                window.location.href = `${pagehosturi}/app.html?id=${encodeURIComponent(id)}`;
             };
 
             wrapper.appendChild(card);
