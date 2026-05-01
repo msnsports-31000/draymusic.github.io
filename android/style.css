@@ -261,7 +261,7 @@ body.widgetapp .wigdisable {
 .progress-wrapper {
     position: relative;
     width: 100%;
-    height: 4px;
+    height: 8px;
     background: #333;
     transition: height 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
     z-index: 20;
@@ -415,14 +415,12 @@ body.widgetapp .wigdisable {
     border-radius: 50%;
 }
 
-/* ===== Audio Settings Side Pane ===== */
 .side-pane {
     position: fixed;
     top: 0;
-    right: -320px; /* Hidden off-screen by default */
-    width: 300px;
+    right: -800px;
+    width: 100%;
     height: 100vh;
-    background: rgba(18, 18, 18, 0.7);
     backdrop-filter: blur(25px);
     -webkit-backdrop-filter: blur(25px);
     border-left: 1px solid rgba(255, 255, 255, 0.1);
@@ -431,7 +429,6 @@ body.widgetapp .wigdisable {
     display: flex;
     flex-direction: column;
     padding: 20px;
-    box-shadow: -5px 0 25px rgba(0,0,0,0.5);
 }
 
 .side-pane.open {
@@ -454,6 +451,7 @@ body.widgetapp .wigdisable {
 .pane-content {
     flex: 1;
     overflow-y: auto;
+    overflow: hidden;
 }
 
 .control-group {
@@ -464,11 +462,8 @@ body.widgetapp .wigdisable {
 }
 
 .control-group h3 {
-    font-size: 13px;
     color: var(--accent);
     margin: 0 0 15px 0;
-    text-transform: uppercase;
-    letter-spacing: 1px;
 }
 
 .eq-sliders {
@@ -484,9 +479,8 @@ body.widgetapp .wigdisable {
     align-items: center;
 }
 
-/* Vertical Sliders cross-browser hack */
 .eq-slider-col input[type=range] {
-    writing-mode: bt-lr; /* IE */
+    writing-mode: bt-lr;
     -webkit-appearance: slider-vertical; /* WebKit */
     width: 8px;
     height: 100px;
@@ -545,13 +539,36 @@ body.widgetapp .wigdisable {
     .mini-player {
         bottom: 0px !important;
         left: auto !important;
-        width: 500px !important;
+        width: 100% !important;
         right: 0px !important;
         border-radius: 0px;
-        border-top-left-radius: 20px !important;
     }
     
     .scroll-area {
-        padding: 0 16px 0px;
+        padding: 0 16px 80px;
+    }
+
+    .side-pane {
+        width: 300px;
+        box-shadow: -5px 0 25px rgba(0,0,0,0.5);
+    }
+
+    .control-group {
+        padding: 10px;
+        margin-bottom: 10px;
+    }
+
+    .song-card {
+        padding: 6px 0;
+    }
+
+    .progress-wrapper {
+        height: 4px;
+    }
+
+    .action-btns {
+        background: transparent;
+        backdrop-filter: none;
+        -webkit-backdrop-filter: none;
     }
 }
