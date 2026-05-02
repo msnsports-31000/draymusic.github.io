@@ -423,7 +423,6 @@ body.widgetapp .wigdisable {
     height: 100vh;
     backdrop-filter: blur(25px);
     -webkit-backdrop-filter: blur(25px);
-    border-left: 1px solid rgba(255, 255, 255, 0.1);
     transition: right 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
     z-index: 100;
     display: flex;
@@ -551,6 +550,7 @@ body.widgetapp .wigdisable {
     .side-pane {
         width: 300px;
         box-shadow: -5px 0 25px rgba(0,0,0,0.5);
+        border-left: 2px solid rgba(255, 255, 255, 0.1);
     }
 
     .control-group {
