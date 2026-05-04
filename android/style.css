@@ -38,16 +38,6 @@ body {
     overflow: hidden;
 }
 
-body.winxpclient #errorScreen {
-    display: flex;
-    display: -ms-flexbox;
-}
-
-body.win-type-body #errorScreen {
-    display: flex;
-    display: -ms-flexbox;
-}
-
 body.widgetapp .app-header {
     padding: 0px 10px;
     -webkit-app-region: drag;
@@ -55,6 +45,14 @@ body.widgetapp .app-header {
 
 body.widgetapp .app-header h1 {
     font-weight: 100;
+}
+
+body.widgetapp .star-btn {
+    display: none;
+}
+
+body.widgetapp .nav-arrow {
+    display: none !important;
 }
 
 body.widgetapp .track-info img {
@@ -611,6 +609,7 @@ body.widgetapp .wigdisable {
     height: 100%;
     transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.1);
     will-change: transform;
+    overflow: hidden;
 }
 
 .page {
@@ -708,7 +707,7 @@ body.widgetapp .wigdisable {
     background: rgba(255, 255, 255, 0.15);
     backdrop-filter: blur(15px);
     -webkit-backdrop-filter: blur(15px);
-    border: 1px solid rgba(255, 255, 255, 0.1);
+    border: 2px solid rgba(255, 255, 255, 0.1);
     color: white;
     width: 54px;
     height: 54px;
@@ -720,6 +719,13 @@ body.widgetapp .wigdisable {
     -ms-flex-align: center;
     justify-content: center;
     -ms-flex-pack: center;
+    opacity: 0.3;
+    cursor: pointer;
+    transition: opacity 300ms ease, transform 300ms ease;
+}
+
+.nav-arrow:hover {
+    opacity: 1;
 }
 
 .nav-arrow.left { left: 0px; }
