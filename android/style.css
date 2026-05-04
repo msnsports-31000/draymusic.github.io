@@ -51,6 +51,10 @@ body.widgetapp .star-btn {
     display: none;
 }
 
+body.widgetapp .context-menu {
+    display: none !important;
+}
+
 body.widgetapp .nav-arrow {
     display: none !important;
 }
