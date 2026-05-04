@@ -550,21 +550,17 @@ function updatePlayback() {
     }
 }
 
-// --- Event Listeners Setup ---
 function bindLiveSlider(el, callback) {
     if (!el) return;
-    // Bind to both input (real-time) and change (IE11 fallback guarantee)
     el.addEventListener('input', callback);
     el.addEventListener('change', callback);
 }
 
 function bindEvents() {
-    // Disable default browser context menu everywhere
     document.addEventListener('contextmenu', function (e) {
         e.preventDefault();
     });
 
-    // EQ and Modals
     if (DOM.btnEQ && DOM.eqPane) {
         DOM.btnEQ.addEventListener('click', function () { DOM.eqPane.classList.add('open'); });
     }
@@ -572,7 +568,6 @@ function bindEvents() {
         DOM.btnCloseEQ.addEventListener('click', function () { DOM.eqPane.classList.remove('open'); });
     }
 
-    // Audio Controls
     if (DOM.btnPlayPause) {
         DOM.btnPlayPause.addEventListener('click', function () {
             if (DOM.audio.paused) {
@@ -595,7 +590,6 @@ function bindEvents() {
         });
     }
 
-    // Seek Bar
     if (DOM.seekBar) {
         var startSeeking = function () { if (DOM.progressWrapper) DOM.progressWrapper.classList.add('seeking'); };
         var stopSeeking = function () { if (DOM.progressWrapper) DOM.progressWrapper.classList.remove('seeking'); };
@@ -615,12 +609,11 @@ function bindEvents() {
         window.addEventListener('mouseup', stopSeeking);
     }
 
-    // Audio Element Events
     if (DOM.audio) {
         DOM.audio.addEventListener('loadedmetadata', function () {
             if (pendingSeekPercent !== null) applySeekToAudio(pendingSeekPercent);
             if (isFinite(DOM.audio.duration)) updateSeekUI((DOM.audio.currentTime / DOM.audio.duration) * 100);
-            updatePlayback(); // Re-apply speed/pitch on new song metadata
+            updatePlayback();
         });
 
         DOM.audio.addEventListener('timeupdate', function () {
@@ -640,11 +633,10 @@ function bindEvents() {
         DOM.audio.addEventListener('play', function () {
             initAudioEngine();
             if (audioCtx && audioCtx.state === 'suspended') audioCtx.resume();
-            updatePlayback(); // Ensure settings apply right as it starts
+            updatePlayback();
         });
     }
 
-    // Search
     if (DOM.searchInput) {
         bindLiveSlider(DOM.searchInput, function (e) {
             if (currentPage !== 0 && e.target.value.trim().length > 0 && !isWidgetApp()) goToPage(0);
@@ -656,7 +648,6 @@ function bindEvents() {
         });
     }
 
-    // Swipe / Navigation
     if (DOM.pageContainer) {
         var touchStartX = 0;
         DOM.pageContainer.addEventListener('touchstart', function (e) {
@@ -664,7 +655,7 @@ function bindEvents() {
         }, { passive: true });
 
         DOM.pageContainer.addEventListener('touchend', function (e) {
-            if (isWidgetApp()) return; // Block swiping in widget mode
+            if (isWidgetApp()) return;
             var touchEndX = e.changedTouches[0].screenX;
             if (touchEndX < touchStartX - 50 && currentPage < totalPages - 1) goToPage(currentPage + 1);
             if (touchEndX > touchStartX + 50 && currentPage > 0) goToPage(currentPage - 1);
@@ -681,7 +672,6 @@ function bindEvents() {
     if (DOM.navLeft) DOM.navLeft.addEventListener('click', function () { if (currentPage > 0) goToPage(currentPage - 1); });
     if (DOM.navRight) DOM.navRight.addEventListener('click', function () { if (currentPage < totalPages - 1) goToPage(currentPage + 1); });
 
-    // Playlists View Interactions
     if (DOM.btnBackToPlaylists) {
         DOM.btnBackToPlaylists.addEventListener('click', function () {
             if (DOM.playlistDetailView) DOM.playlistDetailView.style.display = 'none';
@@ -702,14 +692,12 @@ function bindEvents() {
         });
     }
 
-    // Context Menu Global Dismiss
     document.addEventListener('click', function (e) {
         if (DOM.contextMenu && !DOM.contextMenu.contains(e.target) && !e.target.closest('.song-card') && !e.target.closest('.playlist-card')) {
             DOM.contextMenu.style.display = 'none';
         }
     });
 
-    // Submenu Buttons
     if (DOM.btnCreatePlaylist && DOM.newPlaylistInput) {
         DOM.btnCreatePlaylist.addEventListener('click', function () {
             var name = DOM.newPlaylistInput.value.trim();
@@ -746,23 +734,23 @@ function bindEvents() {
     if (DOM.btnDeletePlaylist) {
         DOM.btnDeletePlaylist.addEventListener('click', function () {
             if (activeTargetPlaylist) {
-                if (confirm("Are you sure you want to delete the playlist '" + activeTargetPlaylist + "'?")) {
-                    delete userPlaylists[activeTargetPlaylist];
-                    savePlaylists();
-                    renderPlaylists();
-                    DOM.contextMenu.style.display = 'none';
+                delete userPlaylists[activeTargetPlaylist];
+                savePlaylists();
+                renderPlaylists();
+                DOM.contextMenu.style.display = 'none';
 
-                    // If the user deletes the playlist while viewing inside it
-                    if (DOM.playlistDetailView.style.display === 'block' && DOM.detailPlaylistTitle.textContent === activeTargetPlaylist) {
-                        DOM.playlistDetailView.style.display = 'none';
-                        DOM.playlistMainView.style.display = 'block';
-                    }
+                if (
+                    DOM.playlistDetailView.style.display === 'block' &&
+                    DOM.detailPlaylistTitle.textContent === activeTargetPlaylist
+                ) {
+                    DOM.playlistDetailView.style.display = 'none';
+                    DOM.playlistMainView.style.display = 'block';
                 }
             }
         });
     }
 
-    // Real-Time Effects Processing Binding
+
     bindLiveSlider(DOM.speedSlider, updatePlayback);
     if (DOM.preservePitch) DOM.preservePitch.addEventListener('change', updatePlayback);
 
@@ -779,20 +767,16 @@ function bindEvents() {
     }
 }
 
-/* ===== Windows UWP Integration ===== */
-/* ===== Windows UWP integration (ES5-safe) ===== */
 (function initWindowsIntegration() {
     if (typeof window.Windows === 'undefined') {
         try { console.info('Windows Runtime not available — skipping UWP integration.'); } catch (e) { }
         return;
     }
 
-    // Apply the requested class to the body if UWP is detected
     try {
         if (document.body) {
             document.body.classList.add('win-type-body');
         } else {
-            // Fallback just in case the script runs before the body is parsed
             document.addEventListener("DOMContentLoaded", function () {
                 document.body.classList.add('win-type-body');
             });
@@ -807,7 +791,6 @@ function bindEvents() {
     var Notifications = Win.UI.Notifications || null;
     var DataXml = Win.Data.Xml.Dom || null;
 
-    /* ---------- Live Tile Integration (All Tile Sizes) ---------- */
     function updateLiveTileFromXml() {
         if (!Notifications) return;
         var url = 'https://draydenthemiiyt-maker.github.io/draymusic.github.io/music.xml?nocache=' + new Date().getTime();
@@ -864,7 +847,6 @@ function bindEvents() {
 
     updateLiveTileFromXml();
 
-    /* ---------- Accent color integration ---------- */
     try {
         if (ViewMgmt && ViewMgmt.UISettings) {
             var uiSettings = new ViewMgmt.UISettings();
@@ -910,7 +892,6 @@ function bindEvents() {
         try { console.warn('Accent integration failed:', e); } catch (err) { }
     }
 
-    /* ---------- System Media Transport Controls (SMTC) integration ---------- */
     try {
         if (Media && Media.SystemMediaTransportControls) {
             var smtc = Media.SystemMediaTransportControls.getForCurrentView();
@@ -1066,7 +1047,6 @@ function bindEvents() {
     }
 })();
 
-// --- Initialization ---
 updateNavArrows();
 bindEvents();
 loadMusic();
