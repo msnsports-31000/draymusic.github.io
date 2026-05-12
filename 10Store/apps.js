@@ -2,13 +2,18 @@
     "use strict";
 
     // --- PLATFORM DETECTION ---
+    // Custom ES5 function to replace URLSearchParams for IE11 compatibility
+    function getQueryParam(name) {
+        var match = new RegExp('[?&]' + name + '=([^&]*)').exec(window.location.search);
+        return match && decodeURIComponent(match[1].replace(/\+/g, ' '));
+    }
+
     // Strictly using the URL parameter to determine compatibility
-    var urlParams = new URLSearchParams(window.location.search);
-    var isMobile = urlParams.get('WindowsPhone') === "1";
+    var isMobile = getQueryParam('WindowsPhone') === "1";
     var isPC = !isMobile;
     var platformSuffix = isMobile ? "&WindowsPhone=1" : "&WindowsPhone=0";
 
-    var searchQuery = urlParams.get('search');
+    var searchQuery = getQueryParam('search');
 
     function init() {
         var titleEl = document.getElementById("display-title");
