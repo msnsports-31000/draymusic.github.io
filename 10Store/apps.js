@@ -1,27 +1,20 @@
 (function () {
     "use strict";
 
-    var deviceFamily = "Windows.Desktop";
-    deviceFamily = (window.innerWidth < 800) ? "Windows.Mobile" : "Windows.Desktop";
-
-    var isMobile = (deviceFamily === "Windows.Mobile");
+    // --- PLATFORM DETECTION ---
+    // Strictly using the URL parameter to determine compatibility
+    var urlParams = new URLSearchParams(window.location.search);
+    var isMobile = urlParams.get('WindowsPhone') === "1";
     var isPC = !isMobile;
+    var platformSuffix = isMobile ? "&WindowsPhone=1" : "&WindowsPhone=0";
 
-    function getQueryParam(name) {
-        name = name.replace(/[\[]/, "\\[").replace(/[\]]/, "\\]");
-        var regex = new RegExp("[\\?&]" + name + "=([^&#]*)");
-        var results = regex.exec(window.location.search);
-        return results === null ? "" : decodeURIComponent(results[1].replace(/\+/g, " "));
-    }
-
-    var searchQuery = getQueryParam('search');
+    var searchQuery = urlParams.get('search');
 
     function init() {
         var titleEl = document.getElementById("display-title");
         if (titleEl) {
             titleEl.innerText = searchQuery ? searchQuery : "All apps";
         }
-
 
         var grid = document.getElementById("apps-grid");
 
@@ -58,12 +51,14 @@
 
         var validApps = [];
 
+        // Filter by compatibility (Platform-specific) and search query
         for (var j = 0; j < apps.length; j++) {
             if (filter(apps[j]) && isCompatible(apps[j])) {
                 validApps.push(apps[j]);
             }
         }
 
+        // Shuffle valid apps
         for (var i = validApps.length - 1; i > 0; i--) {
             var k = Math.floor(Math.random() * (i + 1));
             var temp = validApps[i];
@@ -71,14 +66,12 @@
             validApps[k] = temp;
         }
 
-        // 3. Render the shuffled apps
         validApps.forEach(function (app, idx) {
             var wrapper = document.createElement("div");
             wrapper.className = "win-container win-focusable";
 
             var card = document.createElement("div");
             card.className = "app-card win-item";
-            // The staggered animation delay still works perfectly with the random order
             card.style.transitionDelay = (idx * 50) + "ms";
 
             var id = app.getAttribute("id");
@@ -90,21 +83,21 @@
                 '<div class="win-type-caption win-type-ellipsis" style="opacity:0.6;">' + getVal(app, "publisher") + '</div>' +
                 '</div>';
 
+            // Pass the platform state forward to the app detail page
             wrapper.onclick = (function (appId) {
-                return function () { window.location.href = 'ms-appx-web:///app.html?id=' + appId; };
+                return function () { 
+                    window.location.href = 'ms-appx-web:///app.html?id=' + appId + platformSuffix; 
+                };
             })(id);
 
             wrapper.appendChild(card);
             grid.appendChild(wrapper);
 
-            (function (c) {
-                setTimeout(function () { c.classList.add("visible"); }, 50);
-            })(card);
+            setTimeout(function () { card.classList.add("visible"); }, 50);
         });
 
-        // 4. Handle empty state
         if (validApps.length === 0) {
-            grid.innerHTML = "<div style='padding:20px; opacity:0.6;'>No apps found.</div>";
+            grid.innerHTML = "<div style='padding:20px; opacity:0.6;'>No apps found for this platform.</div>";
         }
     }
 
