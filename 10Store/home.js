@@ -6,9 +6,14 @@
     var heroTimer = null;
     
     // --- PLATFORM DETECTION ---
+    // Custom ES5 function to replace URLSearchParams for IE11 compatibility
+    function getQueryParam(name) {
+        var match = new RegExp('[?&]' + name + '=([^&]*)').exec(window.location.search);
+        return match && decodeURIComponent(match[1].replace(/\+/g, ' '));
+    }
+
     // Strictly listening to the URL parameter ?WindowsPhone=1 or 0
-    var urlParams = new URLSearchParams(window.location.search);
-    var isMobile = urlParams.get('WindowsPhone') === "1";
+    var isMobile = getQueryParam('WindowsPhone') === "1";
     var isPC = !isMobile;
     var platformSuffix = isMobile ? "&WindowsPhone=1" : "&WindowsPhone=0";
 
