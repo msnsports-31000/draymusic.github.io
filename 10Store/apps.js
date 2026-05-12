@@ -82,7 +82,7 @@
             var id = app.getAttribute("id");
 
             card.innerHTML =
-                '<img class="win-item-image" src="' + getVal(app, "icon") + '">' +
+                '<img class="win-item-image" loading="lazy" src="' + getVal(app, "icon") + '">' +
                 '<div class="app-card-info">' +
                 '<div class="app-name win-type-base win-type-ellipsis">' + getVal(app, "name") + '</div>' +
                 '<div class="win-type-caption win-type-ellipsis" style="opacity:0.6;">' + getVal(app, "publisher") + '</div>' +
