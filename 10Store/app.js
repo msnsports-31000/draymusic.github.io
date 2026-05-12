@@ -1,14 +1,11 @@
 (function () {
     "use strict";
 
-    function getQueryParam(name) {
-        name = name.replace(/[\[]/, "\\[").replace(/[\]]/, "\\]");
-        var regex = new RegExp("[\\?&]" + name + "=([^&#]*)");
-        var results = regex.exec(window.location.search);
-        return results === null ? "" : decodeURIComponent(results[1].replace(/\+/g, " "));
-    }
-
-    var appId = getQueryParam('id');
+    // --- PLATFORM DETECTION ---
+    var urlParams = new URLSearchParams(window.location.search);
+    var appId = urlParams.get('id');
+    var isPhone = urlParams.get('WindowsPhone') === "1"; 
+    // No fallbacks to screen size: it is either "1" (true) or it isn't.
 
     function loadAppData() {
         console.log("Fetching App Data via XMLHttpRequest...");
@@ -69,6 +66,12 @@
         var desc = getVal(app, "description");
         var packageUrl = getVal(app, "package");
 
+        // --- PLATFORM SPECIFIC UI CHANGES (Optional) ---
+        // If you want to change styles based on the platform variable:
+        if (isPhone) {
+            document.body.classList.add("mobile-view");
+        }
+
         function isValidImageUrl(url) {
             if (!url) return false;
             url = url.trim();
@@ -87,7 +90,6 @@
         }
 
         var screenshots = [];
-
         for (var s = 1; s <= 5 && screenshots.length < 5; s++) {
             var tagName = "screenshot" + s;
             var el = app.getElementsByTagName(tagName)[0];
@@ -111,12 +113,15 @@
             }
         }
 
+        // Maintaining the platform state in the publisher search link
+        var platformSuffix = isPhone ? "&WindowsPhone=1" : "&WindowsPhone=0";
+
         var html =
             '<div class="app-hero">' +
             '<img src="' + icon + '" class="app-logo-big" alt="App icon">' +
             '<div class="app-info-right">' +
             '<div class="app-title">' + name + '</div>' +
-            '<a class="app-publisher" href="' + pagehosturi + '/apps.html?search=' + encodeURIComponent(pub) + '">' + pub + '</a>' +
+            '<a class="app-publisher" href="' + pagehosturi + '/apps.html?search=' + encodeURIComponent(pub) + platformSuffix + '">' + pub + '</a>' +
             '<div class="app-version">Version ' + version + '</div>' +
             '<div id="dl-container">' +
             '<button class="win-button btn-download" id="dl-btn">Download</button>' +
@@ -164,7 +169,8 @@
                 var messagePayload = {
                     action: "downloadApp",
                     appName: name,
-                    packageUrl: packageUrl
+                    packageUrl: packageUrl,
+                    platform: isPhone ? "mobile" : "desktop" // Informing the host of the platform
                 };
 
                 try {
@@ -179,6 +185,7 @@
             };
         }
 
+        // ... [Rest of the carousel logic remains the same] ...
         try {
             var ssSection = document.querySelector(".app-screenshots");
             var anyValid = screenshots && screenshots.length > 0;
@@ -305,16 +312,7 @@
                     });
                 })(m);
             }
-
-            for (var p = 0; p < items.length; p++) {
-                if (items[p].type === "image") {
-                    var pre = new Image();
-                    pre.src = items[p].url;
-                }
-            }
-
             showIndex(0);
-
         } catch (ex) {
             console.error("Screenshots initialization failed:", ex);
         }
