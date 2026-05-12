@@ -4,10 +4,8 @@
     var featuredApps = [];
     var currentHeroIndex = 0;
     var heroTimer = null;
-    
-    var deviceFamily = "Windows.Desktop";
-    deviceFamily = (window.innerWidth < 800) ? "Windows.Mobile" : "Windows.Desktop";
-
+    var urlParams = new URLSearchParams(window.location.search);
+    var isPhoneVar = urlParams.get('WindowsPhone');
     var isMobile = (deviceFamily === "Windows.Mobile");
     var isPC = !isMobile;
 
