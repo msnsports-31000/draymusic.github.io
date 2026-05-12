@@ -4,10 +4,13 @@
     var featuredApps = [];
     var currentHeroIndex = 0;
     var heroTimer = null;
+    
+    // --- PLATFORM DETECTION ---
+    // Strictly listening to the URL parameter ?WindowsPhone=1 or 0
     var urlParams = new URLSearchParams(window.location.search);
-    var isPhoneVar = urlParams.get('WindowsPhone');
-    var isMobile = (deviceFamily === "Windows.Mobile");
+    var isMobile = urlParams.get('WindowsPhone') === "1";
     var isPC = !isMobile;
+    var platformSuffix = isMobile ? "&WindowsPhone=1" : "&WindowsPhone=0";
 
     function getVal(parent, tag) {
         var el = parent.getElementsByTagName(tag)[0];
@@ -56,18 +59,6 @@
                 var v3 = (first.textContent || first.getAttribute("src") || "").trim();
                 if (v3) return v3;
             }
-
-            var all = appNode.getElementsByTagName("*");
-            for (var j = 0; j < all.length; j++) {
-                var tn = all[j].tagName || "";
-                if (tn.toLowerCase().indexOf("screenshot") !== -1) {
-                    if (tn.toLowerCase() === "screenshot1") {
-                        var vv = (all[j].textContent || all[j].getAttribute("src") || "").trim();
-                        if (vv) return vv;
-                    }
-                }
-            }
-
             return null;
         }
 
@@ -77,13 +68,10 @@
             if (!url) return null;
             if (url.indexOf("data:") === 0 || url.indexOf("http://") === 0 || url.indexOf("https://") === 0) return url;
             try {
-                var base = document.location.href;
                 var a = document.createElement("a");
                 a.href = url;
                 if (a.href) return a.href;
-            } catch (e) {
-                // ignore
-            }
+            } catch (e) { }
             return url;
         }
 
@@ -96,25 +84,9 @@
             var desc = getVal(app, "description") || getVal(app, "publisher") || "";
 
             var candidate = null;
-            try {
-                candidate = findScreenshot1(app);
-            } catch (err) {
-                console.error("findScreenshot1 error", err);
-                candidate = null;
-            }
+            try { candidate = findScreenshot1(app); } catch (err) { candidate = null; }
 
-            var bgUrl;
-
-            if (candidate && isYouTube(candidate)) {
-                bgUrl = normalizeUrl(icon);
-            } else {
-                bgUrl = normalizeUrl(candidate) || normalizeUrl(icon) || "";
-            }
-
-            if (window && window.console && window.console.log) {
-                console.log("renderHero: app id=", app.getAttribute && app.getAttribute("id"), "screenshot1 raw=", candidate, "bgUrl=", bgUrl, "icon=", icon);
-            }
-
+            var bgUrl = (candidate && isYouTube(candidate)) ? normalizeUrl(icon) : (normalizeUrl(candidate) || normalizeUrl(icon) || "");
             var safeBg = (bgUrl + "").replace(/'/g, "\\'");
 
             slide.innerHTML =
@@ -129,7 +101,7 @@
 
             slide.onclick = function () {
                 var id = app.getAttribute && app.getAttribute("id");
-                if (id) window.location.href = 'ms-appx-web:///app.html?id=' + encodeURIComponent(id);
+                if (id) window.location.href = 'ms-appx-web:///app.html?id=' + encodeURIComponent(id) + platformSuffix;
             };
 
             heroWrap.appendChild(slide);
@@ -147,7 +119,6 @@
 
         heroWrap.appendChild(prevBtn);
         heroWrap.appendChild(nextBtn);
-
         container.appendChild(heroWrap);
         startTimer();
     }
@@ -155,13 +126,10 @@
     function loadHomeContent() {
         var container = document.getElementById("home-container") || document.body;
 
-        WinJS.xhr({
-            url: server,
-        }).then(function (res) {
+        WinJS.xhr({ url: server }).then(function (res) {
             try {
                 var parser = new DOMParser();
                 var xml = parser.parseFromString(res.responseText, "text/xml");
-
                 if (!xml || !container) return;
 
                 container.innerHTML = "";
@@ -176,6 +144,7 @@
                     }
                 }
 
+                // Shuffle
                 for (var i = featuredApps.length - 1; i > 0; i--) {
                     var k = Math.floor(Math.random() * (i + 1));
                     var temp = featuredApps[i];
@@ -209,13 +178,9 @@
                         container.appendChild(grid);
                     }
                 }
-
-            } catch (err) {
-                console.error("Home Loader Error:", err);
-            }
+            } catch (err) { console.error("Home Loader Error:", err); }
         });
     }
-
 
     function isCompatible(appNode) {
         var canPC = getVal(appNode, "pcCapable").toLowerCase().trim() === "true";
@@ -225,15 +190,12 @@
 
     function fillGrid(grid, apps, filter) {
         var validApps = [];
-
-        // 1. Collect apps that match the filter and compatibility
         for (var j = 0; j < apps.length; j++) {
             if (filter(apps[j]) && isCompatible(apps[j])) {
                 validApps.push(apps[j]);
             }
         }
-
-        // 2. Shuffle the array of valid apps
+        // Shuffle
         for (var i = validApps.length - 1; i > 0; i--) {
             var k = Math.floor(Math.random() * (i + 1));
             var temp = validApps[i];
@@ -241,7 +203,6 @@
             validApps[k] = temp;
         }
 
-        // 3. Render the shuffled apps
         validApps.forEach(function (app, idx) {
             var wrapper = document.createElement("div");
             wrapper.className = "win-container win-focusable";
@@ -258,15 +219,13 @@
                 '</div>';
 
             wrapper.onclick = function () {
-                window.location.href = 'ms-appx-web:///app.html?id=' + encodeURIComponent(id);
+                window.location.href = 'ms-appx-web:///app.html?id=' + encodeURIComponent(id) + platformSuffix;
             };
 
             wrapper.appendChild(card);
             grid.appendChild(wrapper);
 
-            (function (c) {
-                setTimeout(function () { c.classList.add("visible"); }, 50);
-            })(card);
+            setTimeout(function () { card.classList.add("visible"); }, 50);
         });
     }
 
