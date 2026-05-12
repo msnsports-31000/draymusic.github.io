@@ -97,7 +97,7 @@
             slide.innerHTML =
                 '<div class="hero-bg" style="background-image: url(\'' + safeBg + '\')"></div>' +
                 '<div class="hero-content">' +
-                '<img class="hero-img" src="' + (icon ? icon.replace(/"/g, "&quot;") : "") + '" alt="' + (name ? name.replace(/"/g, "&quot;") : "") + '">' +
+                '<img class="hero-img" loading="lazy" src="' + (icon ? icon.replace(/"/g, "&quot;") : "") + '" alt="' + (name ? name.replace(/"/g, "&quot;") : "") + '">' +
                 '<div class="hero-text-info">' +
                 '<div class="hero-title">' + name + '</div>' +
                 '<div class="hero-desc">' + desc + '</div>' +
@@ -217,7 +217,7 @@
             var id = app.getAttribute("id");
 
             card.innerHTML =
-                '<img class="win-item-image" src="' + getVal(app, "icon") + '">' +
+                '<img class="win-item-image" loading="lazy" src="' + getVal(app, "icon") + '">' +
                 '<div class="app-card-info">' +
                 '<div class="app-name win-type-base win-type-ellipsis">' + getVal(app, "name") + '</div>' +
                 '<div class="win-type-caption win-type-ellipsis" style="opacity:0.6;">' + getVal(app, "publisher") + '</div>' +
