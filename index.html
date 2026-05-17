@@ -1,0 +1,752 @@
+﻿<html>
+    <head>
+        <meta charset="utf-8" />
+        <title>DraydenYT's Website</title>
+        <link rel="icon" type="image/png" href="favicon.png" />
+        <style>
+            html,
+            body {
+                overflow: hidden;
+                margin: 0;
+                height: 100%;
+                font-family:
+                    system-ui,
+                    -apple-system,
+                    BlinkMacSystemFont,
+                    "Segoe UI",
+                    Roboto,
+                    Oxygen,
+                    Ubuntu,
+                    Cantarell,
+                    "Helvetica Neue",
+                    Arial,
+                    sans-serif;
+                background: #111;
+                color: #fff;
+                -webkit-user-select: none;
+                -moz-user-select: none;
+                -ms-user-select: none;
+                user-select: none;
+                cursor: default;
+                background-image: url(https://craig-stephen.co.uk/wp-content/uploads/LNER-AZuma-at-Culloden-Viaduct.jpg);
+                background-position: center;
+                background-size: cover;
+                background-repeat: no-repeat;
+            }
+
+            body {
+                display: flex;
+                flex-direction: column;
+            }
+
+            img {
+                pointer-events: none;
+            }
+
+            header {
+                backdrop-filter: blur(20px);
+                -webkit-backdrop-filter: blur(20px);
+                background-color: rgba(108, 108, 108, 0.3);
+                padding: 20px 20px 20px 40px;
+                font-size: 50px;
+                font-weight: 100;
+                flex: 0 0 auto;
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                white-space: nowrap;
+                overflow: hidden;
+                text-overflow: ellipsis;
+            }
+
+            .header-buttons button {
+                background-color: transparent;
+                border: none;
+                color: #fff;
+                font-size: 20px;
+                padding: 8px 20px;
+                margin-left: 15px;
+                white-space: nowrap;
+                overflow: hidden;
+                text-overflow: ellipsis;
+                max-width: 240px;
+            }
+
+            .header-buttons button:hover {
+                color: #640000;
+            }
+
+            .header-buttons {
+                display: flex;
+                align-items: center;
+                justify-content: center;
+            }
+
+            #appContainer {
+                flex: 1 1 auto;
+                overflow-y: auto;
+                position: relative;
+            }
+
+            #apps {
+                display: -ms-flexbox;
+                display: -webkit-flex;
+                display: flex;
+                -ms-flex-wrap: wrap;
+                -webkit-flex-wrap: wrap;
+                flex-wrap: wrap;
+                padding: 15px;
+            }
+
+            #apps > div {
+                margin: 5px;
+            }
+
+            .app {
+                width: 180px;
+                height: 180px;
+                overflow: hidden;
+                backdrop-filter: blur(20px);
+                -webkit-backdrop-filter: blur(20px);
+                background-color: rgba(108, 108, 108, 0.3);
+                border-radius: 20px;
+                padding: 10px;
+                transition: 0.2s;
+            }
+
+            .app:active {
+                background: #252525;
+                transform: scale(0.9);
+            }
+
+            .app img {
+                width: 100px;
+                height: 100px;
+                background-color: rgba(108, 108, 108, 0.3);
+                border-radius: 20px;
+            }
+
+            #overlay {
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                background: rgba(0, 0, 0, 0.6);
+                opacity: 0;
+                pointer-events: none;
+                transition: opacity 0.3s;
+            }
+
+            #overlay.open {
+                opacity: 1;
+                pointer-events: auto;
+            }
+
+            #details {
+                position: fixed;
+                top: 0;
+                right: -1000px;
+                width: 400px;
+                height: 100%;
+                padding: 20px;
+                overflow-y: auto;
+                transition: 0.3s;
+                opacity: 0;
+            }
+
+            #details.open {
+                right: 0;
+                opacity: 1;
+                backdrop-filter: blur(100px);
+                -webkit-backdrop-filter: blur(100px);
+                background-color: rgba(108, 108, 108, 0.3);
+            }
+
+            #details * {
+                opacity: 0;
+                transition: 1s;
+            }
+
+            #details.open * {
+                opacity: 1;
+            }
+
+            #closeBtn {
+                background: none;
+                border: none;
+                color: #fff;
+                font-size: 40px;
+                width: 48px;
+                height: 48px;
+                border-radius: 50%;
+            }
+
+            #closeBtn:hover {
+                background: #ff0000;
+            }
+
+            .screenshots img {
+                width: 100%;
+                border-radius: 10px;
+                margin-bottom: 25px;
+            }
+
+            #musicNotif {
+                position: fixed;
+                top: 20px;
+                right: -400px;
+                width: 320px;
+                background-color: rgba(108, 108, 108, 0.3);
+                backdrop-filter: blur(20px);
+                -webkit-backdrop-filter: blur(20px);
+                border-radius: 15px;
+                padding: 15px;
+                display: flex;
+                align-items: center;
+                box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+                transition: right 0.6s cubic-bezier(0.2, 0.8, 0.2, 1);
+                z-index: 2000;
+            }
+
+            #musicNotif.show {
+                right: 20px;
+            }
+
+            #musicNotifArt {
+                width: 55px;
+                height: 55px;
+                border-radius: 10px;
+                margin-right: 15px;
+                background-color: rgba(0, 0, 0, 0.3);
+                object-fit: cover;
+            }
+
+            #musicNotifInfo {
+                display: flex;
+                flex-direction: column;
+                overflow: hidden;
+                white-space: nowrap;
+            }
+
+            #musicNotifTitle {
+                font-weight: bold;
+                font-size: 15px;
+                margin-bottom: 4px;
+                text-overflow: ellipsis;
+                overflow: hidden;
+            }
+
+            #musicNotifArtist {
+                font-size: 13px;
+                opacity: 0.65;
+                text-overflow: ellipsis;
+                overflow: hidden;
+            }
+
+            #musicCtrlBtn {
+                position: fixed;
+                bottom: 20px;
+                right: 20px;
+                width: 200px;
+                height: 60px;
+                border-radius: 30px;
+                background-color: rgba(108, 108, 108, 0.3);
+                backdrop-filter: blur(20px);
+                -webkit-backdrop-filter: blur(20px);
+                border: none;
+                color: #fff;
+                font-size: 24px;
+                z-index: 2000;
+                box-shadow: 0 4px 15px rgba(0, 0, 0, 0.4);
+                transition: 0.2s;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+            }
+
+            #musicCtrlBtn:active {
+                transform: scale(0.9);
+                background: #252525;
+            }
+
+            #widthWarning {
+                width: 100%;
+                text-align: center;
+                padding: 5px 0;
+                background-color: #ff0000;
+                font-size: 20px;
+                font-weight: 600;
+                display: none;
+                z-index: 3000;
+            }
+
+            @media (max-width: 1100px) {
+                #widthWarning {
+                    display: block;
+                }
+
+                header {
+                    font-size: 25px;
+                    font-weight: 700;
+                }
+
+                .header-buttons button {
+                    font-size: 15px;
+                }
+            }
+        </style>
+    </head>
+    <body>
+        <div id="widthWarning">We recommend a wider screen for this website to look good</div>
+
+        <header>
+            <div class="title">DraydenYT's Website</div>
+            <div class="header-buttons">
+                <button onclick="showPage('projectsPage')">Projects</button>
+                <button onclick="showPage('aboutPage')">About</button>
+                <button onclick="window.open('https://www.youtube.com/@DraydenYT', '_blank')">YouTube</button>
+                <button onclick="window.open('https://discord.gg/9V8fX4BxPn', '_blank')">Join our Community</button>
+            </div>
+        </header>
+
+        <div id="appContainer">
+            <div
+                id="projectsPage"
+                style="
+                    position: absolute;
+                    top: 0px;
+                    left: 0px;
+                    width: 100%;
+                    opacity: 1;
+                    transform: scale(1);
+                    transition:
+                        opacity 0.4s,
+                        transform 0.4s;
+                    pointer-events: auto;
+                    box-sizing: border-box;
+                "
+            >
+                <div id="apps">
+                    <div class="app">
+                        <img
+                            src="https://raw.githubusercontent.com/draydenthemiiyt-maker/10-Store/refs/heads/main/files/1773704616_wave-sound.png"
+                        />
+                        <div><b>DrayMusic</b></div>
+                        <div style="filter: alpha(opacity=70); opacity: 0.7; font-size: 10px">
+                            DrayMusic For 8.1, get the best music streaming experience, Was originally made for 8Store,
+                            but screw them. rework was always better anyways. app may work on rt
+                        </div>
+                    </div>
+                    <div class="app">
+                        <img
+                            src="https://raw.githubusercontent.com/draydenthemiiyt-maker/10-Store/refs/heads/main/files/1000217269-1774951769.png"
+                        />
+                        <div><b>Smiling Bag Clicker for Windows 8.1</b></div>
+                        <div style="filter: alpha(opacity=70); opacity: 0.7; font-size: 10px"></div>
+                    </div>
+                    <div class="app">
+                        <img
+                            src="https://raw.githubusercontent.com/draydenthemiiyt-maker/10-Store/refs/heads/main/files/Square150x150Logo.scale-400-1775753552.png"
+                        />
+                        <div><b>DrayAI for Windows 10</b></div>
+                        <div style="filter: alpha(opacity=70); opacity: 0.7; font-size: 10px">DrayAi 3.3 Is here!</div>
+                    </div>
+                    <div class="app">
+                        <img
+                            src="https://raw.githubusercontent.com/draydenthemiiyt-maker/10-Store/refs/heads/main/files/storelogo.scale-200-1775903021.png"
+                        />
+                        <div><b>10Store 1.0 Patched</b></div>
+                        <div style="filter: alpha(opacity=70); opacity: 0.7; font-size: 10px">
+                            If you install this, you will have to remove the 10Store you are reading this from, have a
+                            good one.
+                        </div>
+                    </div>
+                    <div class="app">
+                        <img
+                            src="https://raw.githubusercontent.com/draydenthemiiyt-maker/10-Store/refs/heads/main/files/storelogo.scale-400-1775903658.png"
+                        />
+                        <div><b>10Store</b></div>
+                        <div style="filter: alpha(opacity=70); opacity: 0.7; font-size: 10px">
+                            10Store, One of the best store revivals on Windows 10, Fast, Straightforward, And easy to
+                            use, Get it on Windows Phone, Surface, &amp; PC.
+                        </div>
+                    </div>
+                    <div class="app">
+                        <img
+                            src="https://raw.githubusercontent.com/draydenthemiiyt-maker/10-Store/refs/heads/main/files/storelogo.scale-180-1777048105.png"
+                        />
+                        <div><b>OREO</b></div>
+                        <div style="filter: alpha(opacity=70); opacity: 0.7; font-size: 10px"></div>
+                    </div>
+                    <div class="app">
+                        <img
+                            src="https://raw.githubusercontent.com/draydenthemiiyt-maker/10-Store/refs/heads/main/files/StoreLogo.scale-100-1777478398.png"
+                        />
+                        <div><b>a Guide to 8Store</b></div>
+                        <div style="filter: alpha(opacity=70); opacity: 0.7; font-size: 10px"></div>
+                    </div>
+                    <div class="app">
+                        <img
+                            src="https://raw.githubusercontent.com/draydenthemiiyt-maker/10-Store/refs/heads/main/files/SmallTile.scale-100-1777645520.png"
+                        />
+                        <div><b>Upload apps to 10Store</b></div>
+                        <div style="filter: alpha(opacity=70); opacity: 0.7; font-size: 10px">
+                            The new 10Store uploader for Windows 10/8.1 can upload apps to 10Store and make it bigger
+                        </div>
+                    </div>
+                    <div class="app">
+                        <img
+                            src="https://raw.githubusercontent.com/draydenthemiiyt-maker/10-Store/refs/heads/main/files/SmallTile.scale-100-1777720370.png"
+                        />
+                        <div><b>10Store Metro</b></div>
+                        <div style="filter: alpha(opacity=70); opacity: 0.7; font-size: 10px"></div>
+                    </div>
+                    <div class="app">
+                        <img
+                            src="https://raw.githubusercontent.com/draydenthemiiyt-maker/10-Store/refs/heads/main/files/SmallTile.scale-200-1777988163.png"
+                        />
+                        <div><b>DrayAI - The best AI client for Windows 8.1!</b></div>
+                        <div style="filter: alpha(opacity=70); opacity: 0.7; font-size: 10px"></div>
+                    </div>
+                    <div class="app">
+                        <img
+                            src="https://raw.githubusercontent.com/draydenthemiiyt-maker/10-Store/refs/heads/main/files/SmallTile.scale-400-1777988322.png"
+                        />
+                        <div><b>DrayAI - ¡El mejor cliente de AI para Windows 8.1!</b></div>
+                        <div style="filter: alpha(opacity=70); opacity: 0.7; font-size: 10px"></div>
+                    </div>
+                    <div class="app">
+                        <img
+                            src="https://raw.githubusercontent.com/draydenthemiiyt-maker/10-Store/refs/heads/main/files/StoreLogo.scale-100-1778540187.png"
+                        />
+                        <div><b>Upload your songs to DrayMusic!</b></div>
+                        <div style="filter: alpha(opacity=70); opacity: 0.7; font-size: 10px"></div>
+                    </div>
+                    <div class="app">
+                        <img
+                            src="https://raw.githubusercontent.com/draydenthemiiyt-maker/10-Store/refs/heads/main/files/logo.scale-100-1778958759.png"
+                        />
+                        <div><b>DraydenYT Projects Metro App</b></div>
+                        <div style="filter: alpha(opacity=70); opacity: 0.7; font-size: 10px"></div>
+                    </div>
+                </div>
+            </div>
+
+            <div
+                id="aboutPage"
+                style="
+                    position: absolute;
+                    top: 0px;
+                    left: 0px;
+                    width: 100%;
+                    opacity: 0;
+                    transform: scale(0.95);
+                    transition:
+                        opacity 0.4s,
+                        transform 0.4s;
+                    pointer-events: none;
+                    padding: 30px;
+                    box-sizing: border-box;
+                "
+            >
+                <div
+                    style="
+                        backdrop-filter: blur(20px);
+                        -webkit-backdrop-filter: blur(20px);
+                        background-color: rgba(108, 108, 108, 0.3);
+                        border-radius: 20px;
+                        padding: 30px;
+                        max-width: 800px;
+                        margin: 0 auto;
+                    "
+                >
+                    <h2 style="margin-top: 0; font-weight: 300; font-size: 32px">About</h2>
+                    <p style="font-size: 18px; line-height: 1.6; opacity: 0.85">I need to fill this in</p>
+                </div>
+            </div>
+        </div>
+
+        <div id="overlay"></div>
+
+        <div id="details">
+            <button id="closeBtn">×</button>
+            <div id="detailsContent"></div>
+        </div>
+
+        <audio id="bgAudio"></audio>
+        <div id="musicNotif">
+            <img id="musicNotifArt" src="" alt="Art" />
+            <div id="musicNotifInfo">
+                <div id="musicNotifTitle">Now playing:</div>
+                <div id="musicNotifArtist">By</div>
+            </div>
+        </div>
+        <button id="musicCtrlBtn">► Play Music</button>
+
+        <script>
+            document.oncontextmenu = function (e) {
+                var event = e || window.event;
+                if (event.preventDefault) {
+                    event.preventDefault();
+                }
+                return false;
+            };
+
+            function $(id) {
+                return document.getElementById(id);
+            }
+
+            function showPage(pageId) {
+                $("projectsPage").style.opacity = pageId === "projectsPage" ? "1" : "0";
+                $("projectsPage").style.transform = pageId === "projectsPage" ? "scale(1)" : "scale(0.95)";
+                $("projectsPage").style.pointerEvents = pageId === "projectsPage" ? "auto" : "none";
+
+                $("aboutPage").style.opacity = pageId === "aboutPage" ? "1" : "0";
+                $("aboutPage").style.transform = pageId === "aboutPage" ? "scale(1)" : "scale(0.95)";
+                $("aboutPage").style.pointerEvents = pageId === "aboutPage" ? "auto" : "none";
+            }
+
+            function openDetails(app) {
+                var d = $("details");
+                var c = $("detailsContent");
+                var desc = app.description ? app.description : "No description";
+
+                var html =
+                    "<h2>" +
+                    app.name +
+                    "</h2>" +
+                    "<p><b>Version:</b> " +
+                    app.version +
+                    "</p>" +
+                    "<p>" +
+                    app.publisher +
+                    "</p>" +
+                    "<p><b>Description:</b><br>" +
+                    desc +
+                    "</p>" +
+                    "<p><b>Download Link:</b><br><a href='" +
+                    app["package"] +
+                    "' target='_blank'>" +
+                    app["package"] +
+                    "</a></p>";
+
+                var hasScreenshots = false;
+                var screenshotsHtml = "<div class='screenshots'><h3>Screenshots</h3>";
+
+                for (var key in app) {
+                    if (app.hasOwnProperty(key) && key.indexOf("screenshot") === 0) {
+                        hasScreenshots = true;
+                        screenshotsHtml += "<img src='" + app[key] + "'>";
+                    }
+                }
+
+                screenshotsHtml += "</div>";
+                if (hasScreenshots) html += screenshotsHtml;
+
+                c.innerHTML = html;
+
+                if (d.className.indexOf("open") === -1) {
+                    d.className += " open";
+                }
+
+                var overlay = $("overlay");
+                if (overlay && overlay.className.indexOf("open") === -1) {
+                    overlay.className += " open";
+                }
+            }
+
+            var closeBtn = $("closeBtn");
+            if (closeBtn) {
+                closeBtn.onclick = function () {
+                    var d = $("details");
+                    d.className = d.className.replace(/(?:^|\s)open(?!\S)/g, "");
+                    var overlay = $("overlay");
+                    if (overlay) {
+                        overlay.className = overlay.className.replace(/(?:^|\s)open(?!\S)/g, "");
+                    }
+                };
+            }
+
+            var overlay = $("overlay");
+            if (overlay) {
+                overlay.onclick = function () {
+                    var d = $("details");
+                    d.className = d.className.replace(/(?:^|\s)open(?!\S)/g, "");
+
+                    overlay.className = overlay.className.replace(/(?:^|\s)open(?!\S)/g, "");
+                };
+            }
+
+            var xhr = window.XMLHttpRequest ? new XMLHttpRequest() : new ActiveXObject("Microsoft.XMLHTTP");
+            xhr.open("GET", "https://raw.githubusercontent.com/draydenthemiiyt-maker/10-Store/main/apps.xml", true);
+            xhr.onreadystatechange = function () {
+                if (xhr.readyState === 4 && (xhr.status === 200 || xhr.status === 0)) {
+                    var xml = xhr.responseXML;
+                    if (!xml && xhr.responseText) {
+                        if (window.DOMParser) {
+                            var parser = new DOMParser();
+                            xml = parser.parseFromString(xhr.responseText, "text/xml");
+                        } else {
+                            var xmlDoc = new ActiveXObject("Microsoft.XMLDOM");
+                            xmlDoc.async = false;
+                            xmlDoc.loadXML(xhr.responseText);
+                            xml = xmlDoc;
+                        }
+                    }
+
+                    if (!xml) return;
+                    var apps = xml.getElementsByTagName("app");
+                    var container = $("apps");
+
+                    for (var i = 0; i < apps.length; i++) {
+                        var appNode = apps[i];
+                        var getTextValue = function (tagName) {
+                            var nodes = appNode.getElementsByTagName(tagName);
+                            return nodes.length > 0 && nodes[0].childNodes.length > 0
+                                ? nodes[0].childNodes[0].nodeValue
+                                : "";
+                        };
+
+                        var publisher = getTextValue("publisher");
+                        if (publisher.indexOf("DraydenYT") === -1) continue;
+                        var name = getTextValue("name");
+                        var icon = getTextValue("icon");
+                        var version = getTextValue("version");
+                        var description = getTextValue("description");
+                        var pkg = getTextValue("package");
+                        var appObj = {
+                            name: name,
+                            icon: icon,
+                            version: version,
+                            publisher: publisher,
+                            description: description,
+                            package: pkg,
+                        };
+
+                        var children = appNode.childNodes;
+                        for (var j = 0; j < children.length; j++) {
+                            var n = children[j];
+                            if (n.nodeType === 1) {
+                                var tagName = n.tagName.toLowerCase();
+                                if (tagName.indexOf("screenshot") === 0) {
+                                    appObj[tagName] = n.childNodes.length > 0 ? n.childNodes[0].nodeValue : "";
+                                }
+                            }
+                        }
+
+                        var div = document.createElement("div");
+                        div.className = "app";
+
+                        div.innerHTML =
+                            "<img src='" +
+                            icon +
+                            "'>" +
+                            "<div><b>" +
+                            name +
+                            "</b></div>" +
+                            "<div style='filter:alpha(opacity=70); opacity:0.7; font-size:10px;'>" +
+                            description +
+                            "</div>";
+
+                        (function (obj) {
+                            div.onclick = function () {
+                                openDetails(obj);
+                            };
+                        })(appObj);
+
+                        container.appendChild(div);
+                    }
+                }
+            };
+            xhr.send();
+
+            var songList = [];
+            var bgAudio = $("bgAudio");
+            var notifTimeout;
+            var isPlaying = false;
+            var musicCtrlBtn = $("musicCtrlBtn");
+            var musicXhr = window.XMLHttpRequest ? new XMLHttpRequest() : new ActiveXObject("Microsoft.XMLHTTP");
+            musicXhr.open("GET", "https://draydenthemiiyt-maker.github.io/draymusic.github.io/music.xml", true);
+            musicXhr.onreadystatechange = function () {
+                if (musicXhr.readyState === 4 && (musicXhr.status === 200 || musicXhr.status === 0)) {
+                    var xml = musicXhr.responseXML;
+                    if (!xml && musicXhr.responseText) {
+                        if (window.DOMParser) {
+                            var parser = new DOMParser();
+                            xml = parser.parseFromString(musicXhr.responseText, "text/xml");
+                        } else {
+                            var xmlDoc = new ActiveXObject("Microsoft.XMLDOM");
+                            xmlDoc.async = false;
+                            xmlDoc.loadXML(musicXhr.responseText);
+                            xml = xmlDoc;
+                        }
+                    }
+                    if (!xml) return;
+
+                    var songs = xml.getElementsByTagName("song");
+                    for (var i = 0; i < songs.length; i++) {
+                        var node = songs[i];
+                        var getVal = function (tag) {
+                            var n = node.getElementsByTagName(tag);
+                            return n.length > 0 && n[0].childNodes.length > 0 ? n[0].childNodes[0].nodeValue : "";
+                        };
+                        songList.push({
+                            title: getVal("title"),
+                            artist: getVal("artist"),
+                            albumArt: getVal("albumArt"),
+                            url: getVal("url"),
+                        });
+                    }
+                }
+            };
+            musicXhr.send();
+
+            function playRandomSong() {
+                if (songList.length === 0) return;
+                var randIdx = Math.floor(Math.random() * songList.length);
+                var song = songList[randIdx];
+                bgAudio.src = song.url;
+                var playPromise = bgAudio.play();
+                isPlaying = true;
+                musicCtrlBtn.innerHTML = "&#9724; Stop Music";
+                $("musicNotifArt").src = song.albumArt;
+                $("musicNotifTitle").innerHTML = "Now playing: " + song.title;
+                $("musicNotifArtist").innerHTML = "Powered by DrayMusic | Song By " + song.artist;
+                var notif = $("musicNotif");
+                if (notif.className.indexOf("show") === -1) {
+                    notif.className += " show";
+                }
+
+                clearTimeout(notifTimeout);
+                notifTimeout = setTimeout(function () {
+                    notif.className = notif.className.replace(/(?:^|\s)show(?!\S)/g, "");
+                }, 6000);
+
+                if (playPromise !== undefined) {
+                    playPromise.catch(function (error) {
+                        isPlaying = false;
+                        musicCtrlBtn.innerHTML = "&#9658; Play Music";
+                    });
+                }
+            }
+
+            bgAudio.onended = function () {
+                playRandomSong();
+            };
+
+            musicCtrlBtn.onclick = function () {
+                if (isPlaying) {
+                    bgAudio.pause();
+                    bgAudio.currentTime = 0;
+                    isPlaying = false;
+                    this.innerHTML = "&#9658; Play Music";
+                    var notif = $("musicNotif");
+                    notif.className = notif.className.replace(/(?:^|\s)show(?!\S)/g, "");
+                } else {
+                    playRandomSong();
+                }
+            };
+        </script>
+    </body>
+</html>
