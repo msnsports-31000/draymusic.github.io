@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html>
 <head>
     <meta charset="utf-8" />
@@ -20,6 +20,67 @@
             height: 100%;
             margin: 0;
             padding: 0;
+        }
+
+        /* Banner styles */
+        .top-banner {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 64px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(90deg, #ff7a18, #ff3d81);
+            color: #fff;
+            font-weight: 700;
+            font-size: 20px;
+            z-index: 9999;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+            padding: 0 16px;
+            box-sizing: border-box;
+        }
+
+        .top-banner .banner-text {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .top-banner .tag {
+            background: rgba(255,255,255,0.12);
+            padding: 6px 10px;
+            border-radius: 18px;
+            font-weight: 800;
+            font-size: 16px;
+        }
+
+        .top-banner .dismiss {
+            position: absolute;
+            right: 12px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: transparent;
+            border: none;
+            color: rgba(255,255,255,0.95);
+            font-size: 20px;
+            cursor: pointer;
+            padding: 6px;
+            line-height: 1;
+        }
+
+        .top-banner .dismiss:focus {
+            outline: 2px solid rgba(255,255,255,0.4);
+            border-radius: 4px;
+        }
+
+        /* Make room for the fixed banner so content isn't hidden */
+        body.has-banner {
+            padding-top: 64px;
         }
 
         body {
@@ -193,10 +254,53 @@
             .hero-desc {
                 font-size: 14px;
             }
+
+            .top-banner {
+                height: 56px;
+                font-size: 18px;
+            }
+
+            body.has-banner {
+                padding-top: 56px;
+            }
         }
     </style>
 </head>
-<body class="win-type-body">
+<body class="win-type-body has-banner">
+    <!-- Top banner -->
+    <div class="top-banner" role="region" aria-label="Announcement banner" aria-live="polite">
+        <div class="banner-text">
+            <span class="tag">#10Store3.0</span>
+            <span>Something big is coming</span>
+        </div>
+        <button class="dismiss" aria-label="Fuck off" title="Dismiss announcement">&times;</button>
+    </div>
+
+    <script>
+        // Dismissible banner behavior
+        (function () {
+            const banner = document.querySelector('.top-banner');
+            const dismiss = document.querySelector('.top-banner .dismiss');
+            dismiss.addEventListener('click', () => {
+                banner.style.transition = 'transform 0.35s ease, opacity 0.35s ease';
+                banner.style.transform = 'translateY(-100%)';
+                banner.style.opacity = '0';
+                // remove banner after animation and remove body padding
+                setTimeout(() => {
+                    banner.remove();
+                    document.body.classList.remove('has-banner');
+                }, 360);
+            });
+
+            // Allow dismiss with Escape key for accessibility
+            document.addEventListener('keydown', (e) => {
+                if (e.key === 'Escape' && document.body.classList.contains('has-banner')) {
+                    dismiss.click();
+                }
+            });
+        })();
+    </script>
+
     <script src="ms-appx-web:///js/config.js"></script>
     <script src="home.js"></script>
 </body>
