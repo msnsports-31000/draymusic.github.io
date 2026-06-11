@@ -38,6 +38,10 @@ body {
     overflow: hidden;
 }
 
+    body.SamsungExperience * {
+        border-radius: 0px !important;
+    }
+
 body.widgetapp .app-header {
     padding: 0px 10px;
     -webkit-app-region: drag;
@@ -661,7 +665,6 @@ body.widgetapp .wigdisable {
 .context-actions input { flex: 1; -ms-flex: 1; background: rgba(0,0,0,0.3); border: 1px solid rgba(255,255,255,0.2); color: white; padding: 8px; border-radius: 6px; outline: none; }
 .context-actions button { background: #00a0ff; background: var(--accent); color: white; border: none; padding: 8px 12px; border-radius: 6px; cursor: pointer; }
 
-/* New Sub-menu Styles for the Playlist context menu */
 .context-btn {
     display: block;
     width: 100%;
