@@ -1,9 +1,3 @@
-/**
- * DrayMusic App Logic
- * IE11 Compatible & Production Ready
- */
-
-// --- DOM Elements ---
 var DOM = {
     audio: document.getElementById('audioElement'),
     songList: document.getElementById('songList'),
@@ -39,8 +33,6 @@ var DOM = {
     btnBackToSongs: document.getElementById('btnBackToSongs'),
     navLeft: document.getElementById('navLeft'),
     navRight: document.getElementById('navRight'),
-
-    // Context Menu Elements
     contextMenu: document.getElementById('contextMenu'),
     contextSongOptions: document.getElementById('contextSongOptions'),
     contextPlaylistOptions: document.getElementById('contextPlaylistOptions'),
@@ -51,7 +43,6 @@ var DOM = {
     btnDeletePlaylist: document.getElementById('btnDeletePlaylist')
 };
 
-// --- State Variables ---
 var allSongs = [];
 var currentPlaylist = [];
 var currentIndex = -1;
@@ -59,19 +50,14 @@ var isLooping = false;
 var pendingSeekPercent = null;
 var activeTargetSong = null;
 var activeTargetPlaylist = null;
-
 var currentPage = 0;
-var totalPages = 3; // 0=Songs, 1=Favorites, 2=Playlists
-
+var totalPages = 3;
 var favoriteUrls = JSON.parse(localStorage.getItem('drayFavorites') || '[]');
 var userPlaylists = JSON.parse(localStorage.getItem('drayPlaylists') || '{}');
-
-// --- Audio Engine State ---
 var audioCtx = null;
 var filters = [];
 var reverbNode, dryGain, wetGain;
 
-// --- Helpers ---
 function isWidgetApp() {
     return document.body.className.indexOf('widgetapp') !== -1;
 }
@@ -94,7 +80,6 @@ function savePlaylists() {
     localStorage.setItem('drayPlaylists', JSON.stringify(userPlaylists));
 }
 
-// --- Core Audio Functions ---
 function safePlay(audioElement) {
     if (!audioElement) return;
     var playPromise = audioElement.play();
@@ -141,7 +126,6 @@ function playSong(index) {
     DOM.audio.src = song.url;
     safePlay(DOM.audio);
 
-    // Ensure audio settings carry over automatically when song changes
     updatePlayback();
 
     if (DOM.currentTitle) DOM.currentTitle.textContent = song.title;
@@ -150,7 +134,6 @@ function playSong(index) {
     if (DOM.btnPlayPause) DOM.btnPlayPause.innerHTML = '<span class="material-symbols-rounded">pause</span>';
 }
 
-// --- Data Fetching (IE11 XHR) ---
 function loadMusic() {
     var url = 'https://draydenthemiiyt-maker.github.io/draymusic.github.io/music.xml?nocache=' + new Date().getTime();
     var xhr = new XMLHttpRequest();
@@ -180,7 +163,6 @@ function loadMusic() {
                 });
             }
 
-            // Shuffle
             for (var k = allSongs.length - 1; k > 0; k--) {
                 var j = Math.floor(Math.random() * (k + 1));
                 var temp = allSongs[k];
@@ -188,7 +170,7 @@ function loadMusic() {
                 allSongs[j] = temp;
             }
 
-            currentPlaylist = allSongs.slice(0); // clone array
+            currentPlaylist = allSongs.slice(0);
             renderList(currentPlaylist);
         } else {
             console.error('Network error loading music');
@@ -198,7 +180,6 @@ function loadMusic() {
     xhr.send();
 }
 
-// --- Rendering Views ---
 function renderList(data, container) {
     if (!container) container = DOM.songList;
     if (!container) return;
@@ -225,14 +206,12 @@ function renderList(data, container) {
     var cards = container.querySelectorAll('.song-card');
     for (var c = 0; c < cards.length; c++) {
         (function (card, idx) {
-            // Play song
             card.addEventListener('click', function (e) {
                 if (e.target.closest && e.target.closest('button')) return;
                 currentPlaylist = data.slice(0);
                 playSong(idx);
             });
 
-            // Favorite Toggle
             var starBtn = card.querySelector('.star-btn');
             if (starBtn) {
                 starBtn.addEventListener('click', function (e) {
@@ -252,7 +231,6 @@ function renderList(data, container) {
                 });
             }
 
-            // Context Menu
             var touchTimer;
             var triggerContext = function (e, pageX, pageY) {
                 e.preventDefault();
@@ -319,7 +297,6 @@ function renderPlaylists() {
         (function (folder) {
             var name = folder.getAttribute('data-name');
 
-            // Standard Left Click -> Open Playlist
             folder.addEventListener('click', function () {
                 if (DOM.detailPlaylistTitle) DOM.detailPlaylistTitle.textContent = name;
                 DOM.playlistMainView.style.display = 'none';
@@ -327,7 +304,6 @@ function renderPlaylists() {
                 renderPlaylistDetail(name);
             });
 
-            // Right Click -> Rename/Delete Menu
             folder.addEventListener('contextmenu', function (e) {
                 e.preventDefault();
                 e.stopPropagation();
@@ -388,7 +364,6 @@ window.playSongFromList = function (url) {
     }
 };
 
-// --- Navigation & Context Menu ---
 function updateNavArrows() {
     if (isWidgetApp()) {
         if (DOM.navLeft) DOM.navLeft.style.display = 'none';
@@ -400,7 +375,7 @@ function updateNavArrows() {
 }
 
 function goToPage(index) {
-    if (isWidgetApp() && index !== 0) return; // Prevent leaving homepage in widget mode
+    if (isWidgetApp() && index !== 0) return;
 
     currentPage = index;
     if (DOM.pageContainer) DOM.pageContainer.style.transform = 'translateX(' + (-index * (100 / totalPages)) + '%)';
@@ -480,8 +455,6 @@ function showPlaylistContextMenu(x, y, playlistName) {
     positionContextMenu(x, y);
 }
 
-
-// --- Audio Effects Engine ---
 function createImpulseResponse(duration, decay) {
     if (!audioCtx) return null;
     var sampleRate = audioCtx.sampleRate;
@@ -501,7 +474,7 @@ function initAudioEngine() {
     if (audioCtx) return;
     try {
         var AudioContextClass = window.AudioContext || window.webkitAudioContext;
-        if (!AudioContextClass) return; // Silent fail for IE11 since it does not support AudioContext natively
+        if (!AudioContextClass) return;
 
         audioCtx = new AudioContextClass();
         var source = audioCtx.createMediaElementSource(DOM.audio);
@@ -766,6 +739,27 @@ function bindEvents() {
         })(i);
     }
 }
+
+(function detectSamsungExperience() {
+    var ua = navigator.userAgent;
+    var isAndroid = ua.indexOf('Android') !== -1;
+    var isSamsungDevice = (ua.indexOf('SAMSUNG') !== -1 || ua.indexOf('Samsung') !== -1 || ua.indexOf('SM-') !== -1);
+    if (isAndroid && isSamsungDevice) {
+        var match = ua.match(/Android\s([0-9\.]+)/);
+        if (match && match[1]) {
+            var version = parseFloat(match[1]);
+            if (version >= 7.0 && version <= 8.1) {
+                if (document.body) {
+                    document.body.classList.add('SamsungExperience');
+                } else {
+                    document.addEventListener('DOMContentLoaded', function () {
+                        document.body.classList.add('SamsungExperience');
+                    });
+                }
+            }
+        }
+    }
+})();
 
 (function initWindowsIntegration() {
     if (typeof window.Windows === 'undefined') {
