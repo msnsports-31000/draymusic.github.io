@@ -2,52 +2,52 @@
 <stations>
 	<station difficulty="beginner">
 		<name>Grantham</name>
-		<image>https://github.com/draydenthemiiyt-maker/draymusic.github.io/blob/main/guesstherailwaystationserver/grantham.png</image>
+		<image>https://raw.githubusercontent.com/draydenthemiiyt-maker/draymusic.github.io/refs/heads/main/guesstherailwaystationserver/grantham.png</image>
 		<hint>The birthplace of Margaret Thatcher &amp; The Mallard Speed Run of 126MPH a few miles south.</hint>
 	</station>
 	<station difficulty="beginner">
 		<name>Doncaster</name>
-		<image>https://github.com/draydenthemiiyt-maker/draymusic.github.io/blob/main/guesstherailwaystationserver/donny.png</image>
+		<image>https://raw.githubusercontent.com/draydenthemiiyt-maker/draymusic.github.io/refs/heads/main/guesstherailwaystationserver/donny.png</image>
 		<hint>Known for engineering speed that once changed rail history.</hint>
 	</station>
 	<station difficulty="beginner">
 		<name>Edinburgh Waverley</name>
-		<image>https://github.com/draydenthemiiyt-maker/draymusic.github.io/blob/main/guesstherailwaystationserver/waverley.png</image>
+		<image>https://raw.githubusercontent.com/draydenthemiiyt-maker/draymusic.github.io/refs/heads/main/guesstherailwaystationserver/waverley.png</image>
 		<hint>The principal station serving the Scottish capital.</hint>
 	</station>
 	<station difficulty="intermediate">
 		<name>Morpeth</name>
-		<image>https://github.com/draydenthemiiyt-maker/draymusic.github.io/blob/main/guesstherailwaystationserver/morpeth.png</image>
+		<image>https://raw.githubusercontent.com/draydenthemiiyt-maker/draymusic.github.io/refs/heads/main/guesstherailwaystationserver/morpeth.png</image>
 		<hint>A small town, home to the sharpest curve on the ECML.</hint>
 	</station>
 	<station difficulty="beginner">
 		<name>London King's Cross</name>
-		<image>https://github.com/draydenthemiiyt-maker/draymusic.github.io/blob/main/guesstherailwaystationserver/kingcross.jpg</image>
+		<image>https://raw.githubusercontent.com/draydenthemiiyt-maker/draymusic.github.io/refs/heads/main/guesstherailwaystationserver/kingcross.jpg</image>
 		<hint>Famous for Platform 9¾ and the southern terminus of the ECML.</hint>
 	</station>
 	<station difficulty="beginner">
 		<name>Peterborough</name>
-		<image>https://github.com/draydenthemiiyt-maker/draymusic.github.io/blob/main/guesstherailwaystationserver/peetabruh.jpg</image>
+		<image>https://raw.githubusercontent.com/draydenthemiiyt-maker/draymusic.github.io/refs/heads/main/guesstherailwaystationserver/peetabruh.jpg</image>
 		<hint>A major junction where routes diverge east to Ely and north to Doncaster.</hint>
 	</station>
 	<station difficulty="beginner">
 		<name>York</name>
-		<image>https://github.com/draydenthemiiyt-maker/draymusic.github.io/blob/main/guesstherailwaystationserver/yorkie.jpg</image>
+		<image>https://raw.githubusercontent.com/draydenthemiiyt-maker/draymusic.github.io/refs/heads/main/guesstherailwaystationserver/yorkie.jpg</image>
 		<hint>Victorian curves and a gateway to the National Railway Museum.</hint>
 	</station>
 	<station difficulty="beginner">
 		<name>Darlington</name>
-		<image>https://github.com/draydenthemiiyt-maker/draymusic.github.io/blob/main/guesstherailwaystationserver/darlington.jpg</image>
+		<image>https://raw.githubusercontent.com/draydenthemiiyt-maker/draymusic.github.io/refs/heads/main/guesstherailwaystationserver/darlington.jpg</image>
 		<hint>Historic stop near the birthplace of passenger railways in 1825.</hint>
 	</station>
 	<station difficulty="beginner">
 		<name>Newcastle Central</name>
-		<image>https://github.com/draydenthemiiyt-maker/draymusic.github.io/blob/main/guesstherailwaystationserver/newcastleVirginHST.jpg</image>
+		<image>https://raw.githubusercontent.com/draydenthemiiyt-maker/draymusic.github.io/refs/heads/main/guesstherailwaystationserver/newcastleVirginHST.jpg</image>
 		<hint>Iconic arched roof station on the Tyne, serving the North East.</hint>
 	</station>
 	<station difficulty="beginner">
 		<name>Berwick-upon-Tweed</name>
-		<image>https://github.com/draydenthemiiyt-maker/draymusic.github.io/blob/main/guesstherailwaystationserver/berwick.jpg</image>
+		<image>https://raw.githubusercontent.com/draydenthemiiyt-maker/draymusic.github.io/refs/heads/main/guesstherailwaystationserver/berwick.jpg</image>
 		<hint>Scenic border town station with views over the Royal Border Bridge.</hint>
 	</station>
 </stations>
