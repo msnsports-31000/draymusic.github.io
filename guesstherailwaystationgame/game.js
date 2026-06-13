@@ -10,16 +10,23 @@ var helpUsesLeft = 5;
 var isMusicEnabled = true;
 var isVideoBackgroundEnabled = true;
 var isClickSoundEnabled = true;
+var isDataReady = false;
+var isSplashFinished = false;
+var currentTrackIndex = -1;
 
 window.onload = function () {
     initGame();
     runSplashSequence();
 };
 
-var xhr = new XMLHttpRequest();
 function loadXML(url, callback, errorCallback) {
-    xhr = new XMLHttpRequest();
+    var xhr = new XMLHttpRequest();
     xhr.open("GET", url, true);
+
+    if (xhr.overrideMimeType) {
+        xhr.overrideMimeType("text/xml");
+    }
+
     xhr.onreadystatechange = function () {
         if (xhr.readyState === 4) {
             if (xhr.status === 200 || xhr.status === 0) {
@@ -40,6 +47,7 @@ function runSplashSequence() {
     var s2 = document.getElementById("splash2");
     var video = document.getElementById("splashVideo");
     var container = document.getElementById("splashContainer");
+    if (container) container.style.display = "block";
 
     function skipSplash() {
         video.onended = null;
@@ -54,6 +62,11 @@ function runSplashSequence() {
 
         if (typeof playRandomBGM === "function") {
             playRandomBGM();
+        }
+
+        isSplashFinished = true;
+        if (isDataReady) {
+            showMenu();
         }
     }
 
@@ -73,6 +86,10 @@ function runSplashSequence() {
             if (container.style.display !== "none") {
                 s2.style.display = "none";
                 video.style.display = "flex";
+                var skipText = document.querySelector('.non-intractable-flashingText');
+                if (skipText) {
+                    skipText.style.display = "block";
+                }
 
                 try {
                     var playPromise = video.play();
@@ -95,7 +112,8 @@ function runSplashSequence() {
 
     function setupSequenceLayout(requiresClick) {
         if (requiresClick) {
-            s1.innerHTML = "DraydenYT Studios<br><span style='font-size: 20px; color: #9ca3af; display: block; margin-top: 20px; font-weight: normal; cursor: pointer;'>Click Anywhere to Start</span>";
+            s1.innerHTML = "Click Anywhere to Start!";
+            s1.style.display = "flex";
 
             container.onclick = function () {
                 container.onclick = null;
@@ -150,15 +168,24 @@ function initGame() {
     initHelpSystem();
     setupGlobalClickEvents();
 
-    loadXML('stations.xml', function (stationXML) {
+    var bgmPlayer = document.getElementById('bgm-player');
+    if (bgmPlayer) {
+        bgmPlayer.onended = function () {
+            playRandomBGM();
+        };
+    }
+
+    loadXML('https://raw.githubusercontent.com/draydenthemiiyt-maker/draymusic.github.io/refs/heads/main/guesstherailwaystationserver/stations.xml', function (stationXML) {
         if (!stationXML) return showError();
         parseStations(stationXML);
 
-        loadXML('data/music.xml', function (musicXML) {
+        loadXML('https://raw.githubusercontent.com/draydenthemiiyt-maker/draymusic.github.io/refs/heads/main/guesstherailwaystationserver/music.xml', function (musicXML) {
             if (!musicXML) return showError();
             parseMusic(musicXML);
-
-            showMenu();
+            isDataReady = true;
+            if (isSplashFinished) {
+                showMenu();
+            }
         }, showError);
     }, showError);
 }
@@ -236,10 +263,24 @@ function safePlayMedia(audioElement) {
 
 function playRandomBGM() {
     if (musicPlaylist.length === 0 || !isMusicEnabled) return;
-    var randomIndex = Math.floor(Math.random() * musicPlaylist.length);
+
+    var randomIndex = currentTrackIndex;
+
+    if (musicPlaylist.length > 1) {
+        while (randomIndex === currentTrackIndex) {
+            randomIndex = Math.floor(Math.random() * musicPlaylist.length);
+        }
+    } else {
+        randomIndex = 0;
+    }
+
+    currentTrackIndex = randomIndex;
+
     var bgmPlayer = document.getElementById('bgm-player');
-    bgmPlayer.src = musicPlaylist[randomIndex];
-    safePlayMedia(bgmPlayer);
+    if (bgmPlayer) {
+        bgmPlayer.src = musicPlaylist[currentTrackIndex];
+        safePlayMedia(bgmPlayer);
+    }
 }
 
 function playYaySound() {
