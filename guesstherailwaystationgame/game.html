@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Guess The Railway Station (UK)</title>
+    <link href="game.css" rel="stylesheet" />
+</head>
+<body>
+    <div id="splashContainer">
+        <div class="splashScreen" id="splash1">DraydenYT Studios</div>
+        <div class="splashScreen" id="splash2">Guess the station.. UK Edition!</div>
+        <video id="splashVideo" class="splashVideo" src="data/intro.mp4"></video>
+    </div>
+
+    <div id="video-container">
+        <video autoplay muted loop playsinline id="video-background">
+            <source src="data/TSW3__UI_Placeholder.mp4" type="video/mp4" />
+        </video>
+        <div id="video-overlay"></div>
+    </div>
+
+    <div id="app-container">
+
+        <div id="error-screen" class="screen" style="opacity: 0; visibility: hidden; position: absolute; left: 30px; top: 30px; width: calc(100% - 60px);">
+            <div class="icon-header">⚠️</div>
+            <h2>Connection Error</h2>
+            <p>We couldn't contact the signalling system. Please check your internet connection and try again. If this issue does not resolve, It's probably a server issue.</p>
+            <button class="btn btn-retry" onclick="initGame()">Retry Connection</button>
+        </div>
+
+        <div id="menu-screen" class="screen" style="opacity: 1; visibility: visible; position: relative;">
+            <h1>Guess The <br><span class="highlight">Railway Station</span></h1>
+            <p class="subtitle">Test your British Railway knowledge!</p>
+
+            <div class="menu-buttons">
+                <button class="btn btn-easy" onclick="startGame('beginner')">Beginner</button>
+                <button class="btn btn-medium" onclick="startGame('intermediate')">Intermediate</button>
+                <button class="btn btn-hard" onclick="startGame('hard')">Hard Mode</button>
+                <button class="btn btn-settings" onclick="showSettings()">Settings</button>
+            </div>
+        </div>
+
+        <div id="settings-screen" class="screen" style="opacity: 0; visibility: hidden; position: absolute; left: 30px; top: 30px; width: calc(100% - 60px);">
+            <div class="icon-header">⚙️</div>
+            <h2>Game Settings</h2>
+            <p class="subtitle">Signal box</p>
+
+            <div class="settings-group">
+                <div class="setting-item">
+                    <span class="setting-label">Game Music</span>
+                    <label class="switch">
+                        <input type="checkbox" id="setting-music" checked onchange="toggleMusicSetting(this.checked)">
+                        <span class="slider"></span>
+                    </label>
+                </div>
+
+                <div class="setting-item">
+                    <span class="setting-label">Train Background</span>
+                    <label class="switch">
+                        <input type="checkbox" id="setting-bg" checked onchange="toggleVideoSetting(this.checked)">
+                        <span class="slider"></span>
+                    </label>
+                </div>
+
+                <div class="setting-item">
+                    <span class="setting-label">UI Sounds</span>
+                    <label class="switch">
+                        <input type="checkbox" id="setting-click-sounds" checked onchange="toggleClickSoundSetting(this.checked)">
+                        <span class="slider"></span>
+                    </label>
+                </div>
+            </div>
+
+            <button class="btn btn-menu" style="margin-top: 25px;" onclick="showMenu()">Save your settings</button>
+        </div>
+
+        <div id="game-screen" class="screen" style="opacity: 0; visibility: hidden; position: absolute; left: 30px; top: 30px; width: calc(100% - 60px);">
+            <div class="game-header">
+                <span id="round-counter">Round 1 / 10</span>
+            </div>
+
+            <div id="image-container">
+                <div id="checkmark" class="hidden">✔️</div>
+            </div>
+
+            <p id="hint-display"></p>
+
+            <div class="input-container">
+                <input type="text" id="answer-input" placeholder="Put your guess here!" autocomplete="off" />
+                <button class="btn btn-submit" onclick="checkAnswer()">Submit</button>
+            </div>
+
+            <p id="feedback"></p>
+
+            <div class="help-container">
+                <button class="btn btn-help" onclick="returnToMenu()">Quit game</button>
+                <button id="help-btn" class="btn btn-help" onclick="useHelp()">Help Me</button>
+                <div id="help-count">Uses left today: 5</div>
+            </div>
+        </div>
+
+        <div id="game-over-screen" class="screen" style="opacity: 0; visibility: hidden; position: absolute; left: 30px; top: 30px; width: calc(100% - 60px);">
+            <div class="icon-header">🏆</div>
+            <h1 id="final-title">Aww mann</h1>
+            <p id="final-score"></p>
+            <button class="btn btn-menu" onclick="showMenu()">Quit to menu</button>
+        </div>
+    </div>
+
+    <audio id="sfx-yay" src="data/success.mp3"></audio>
+    <audio id="sfx-ohno" src="data/ohshit.mp3"></audio>
+    <audio id="sfx-click" src="data/click.mp3"></audio>
+    <audio id="sfx-key" src="data/key.mp3"></audio>
+    <audio id="sfx-error" src="data/error.mp3"></audio>
+    <audio id="bgm-player" loop></audio>
+
+    <script src="game.js"></script>
+</body>
+</html>
