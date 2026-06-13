@@ -10,7 +10,7 @@
 		<image>https://raw.githubusercontent.com/draydenthemiiyt-maker/draymusic.github.io/refs/heads/main/guesstherailwaystationserver/donny.png</image>
 		<hint>Known for engineering speed that once changed rail history.</hint>
 	</station>
-	<station difficulty="beginner">
+	<station difficulty="intermediate">
 		<name>Edinburgh Waverley</name>
 		<image>https://raw.githubusercontent.com/draydenthemiiyt-maker/draymusic.github.io/refs/heads/main/guesstherailwaystationserver/waverley.png</image>
 		<hint>The principal station serving the Scottish capital.</hint>
@@ -41,11 +41,11 @@
 		<hint>Historic stop near the birthplace of passenger railways in 1825.</hint>
 	</station>
 	<station difficulty="beginner">
-		<name>Newcastle Central</name>
+		<name>Newcastle</name>
 		<image>https://raw.githubusercontent.com/draydenthemiiyt-maker/draymusic.github.io/refs/heads/main/guesstherailwaystationserver/newcastleVirginHST.jpg</image>
 		<hint>Iconic arched roof station on the Tyne, serving the North East.</hint>
 	</station>
-	<station difficulty="beginner">
+	<station difficulty="intermediate">
 		<name>Berwick-upon-Tweed</name>
 		<image>https://raw.githubusercontent.com/draydenthemiiyt-maker/draymusic.github.io/refs/heads/main/guesstherailwaystationserver/berwick.jpg</image>
 		<hint>Scenic border town station with views over the Royal Border Bridge.</hint>
