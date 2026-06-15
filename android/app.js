@@ -42,7 +42,13 @@ var DOM = {
     btnRenamePlaylist: document.getElementById('btnRenamePlaylist'),
     btnDeletePlaylist: document.getElementById('btnDeletePlaylist'),
     btnFavorite: document.getElementById('btnFavorite'),
-    btnStop: document.getElementById('btnStop')
+    btnStop: document.getElementById('btnStop'),
+    btnOverflowMenu: document.getElementById('btnOverflowMenu'),
+    contextPlayerOptions: document.getElementById('contextPlayerOptions'),
+    menuBtnLoop: document.getElementById('menuBtnLoop'),
+    menuBtnEQ: document.getElementById('menuBtnEQ'),
+    menuBtnStop: document.getElementById('menuBtnStop'),
+    menuBtnFavorite: document.getElementById('menuBtnFavorite')
 };
 
 var allSongs = [];
@@ -63,7 +69,6 @@ var reverbNode, dryGain, wetGain;
 var offlineDB = null;
 
 window.addEventListener('online', function () {
-    // reload online catalog but keep offline favorites/playlists
     loadMusic();
 });
 
@@ -96,11 +101,9 @@ function openOfflineDB(callback) {
     req.onerror = function () { console.log('DB error'); };
 }
 
-// FIX: New smart syncing function handles downloading, metadata updates, and deletion garbage collection
 function syncSongOffline(songUrl) {
     if (!offlineDB || !songUrl) return;
 
-    // Locate song data from master catalog or playing stack
     var song = null;
     for (var i = 0; i < allSongs.length; i++) {
         if (allSongs[i].url === songUrl) {
@@ -137,13 +140,11 @@ function syncSongOffline(songUrl) {
         var record = e.target.result;
 
         if (!isNeeded) {
-            // Delete song from local IndexedDB storage if no longer needed anywhere
             if (record) {
                 var delTx = offlineDB.transaction(['songs'], 'readwrite');
                 delTx.objectStore('songs')['delete'](songUrl);
                 console.log('Removed from offline cache:', songUrl);
 
-                // Update UI instantly if user does this while offline
                 if (!navigator.onLine) {
                     allSongs = allSongs.filter(function (s) { return s.url !== songUrl; });
                     currentPlaylist = currentPlaylist.filter(function (s) { return s.url !== songUrl; });
@@ -161,7 +162,6 @@ function syncSongOffline(songUrl) {
         }
 
         if (record) {
-            // Record exists - update metadata relationships without wasting bandwidth re-downloading the audio blob
             record.favorite = isFav;
             record.playlists = containingPlaylists;
             if (song) {
@@ -173,7 +173,6 @@ function syncSongOffline(songUrl) {
             updateTx.objectStore('songs').put(record);
             console.log('Updated offline flags for:', songUrl);
         } else {
-            // Song doesn't exist yet - cache it locally if online
             if (song && navigator.onLine) {
                 fetch(songUrl).then(function (res) {
                     return res.blob();
@@ -263,7 +262,6 @@ function playSong(index) {
     var song = currentPlaylist[currentIndex];
     if (!song || !song.url) return;
 
-    // FIX: Plays the offline blob path if it exists, otherwise falls back to online URL
     DOM.audio.src = song.blobUrl || song.url;
     safePlay(DOM.audio);
     document.querySelector('.mini-player').classList.remove('notplaying');
@@ -277,8 +275,10 @@ function playSong(index) {
     if (DOM.btnFavorite) {
         if (favoriteUrls.indexOf(song.url) !== -1) {
             DOM.btnFavorite.classList.add('fav-active');
+            if (DOM.menuBtnFavorite) DOM.menuBtnFavorite.classList.add('fav-active');
         } else {
             DOM.btnFavorite.classList.remove('fav-active');
+            if (DOM.menuBtnFavorite) DOM.menuBtnFavorite.classList.remove('fav-active');
         }
     }
 
@@ -347,14 +347,14 @@ function renderList(data, container) {
         var starClass = isFav ? 'star-btn fav-active' : 'star-btn';
 
         html += '<div class="song-card" data-index="' + i + '" data-url="' + escapeHTML(song.url) + '" style="animation-delay: ' + (i * 0.05) + 's">' +
-                '<img src="' + escapeHTML(song.art) + '" alt="art">' +
-                '<div class="info" style="flex:1;">' +
-                    '<h4>' + escapeHTML(song.title) + '</h4>' +
-                    '<p>' + escapeHTML(song.artist) + '</p>' +
-                '</div>' +
-                '<button class="' + starClass + '" title="Favorite">' +
-                    '<span class="material-symbols-rounded">star</span>' +
-                '</button>' +
+            '<img src="' + escapeHTML(song.art) + '" alt="art">' +
+            '<div class="info" style="flex:1;">' +
+            '<h4>' + escapeHTML(song.title) + '</h4>' +
+            '<p>' + escapeHTML(song.artist) + '</p>' +
+            '</div>' +
+            '<button class="' + starClass + '" title="Favorite">' +
+            '<span class="material-symbols-rounded">star</span>' +
+            '</button>' +
             '</div>';
     }
     container.innerHTML = html;
@@ -391,7 +391,6 @@ function renderList(data, container) {
                         starBtn.classList.remove('fav-active');
                     }
                     saveFavorites();
-                    // FIX: Trigger cache state updates instantly
                     syncSongOffline(songUrl);
                     if (currentPage === 1) renderFavorites();
                 });
@@ -451,9 +450,9 @@ function renderPlaylists() {
         }
 
         html += '<div class="playlist-card" data-name="' + escapeHTML(pName) + '">' +
-                '<div class="playlist-art-grid">' + grids + '</div>' +
-                '<h4>' + escapeHTML(pName) + '</h4>' +
-                '<span>' + songUrls.length + ' songs</span>' +
+            '<div class="playlist-art-grid">' + grids + '</div>' +
+            '<h4>' + escapeHTML(pName) + '</h4>' +
+            '<span>' + songUrls.length + ' songs</span>' +
             '</div>';
     }
     DOM.playlistsContainer.innerHTML = html;
@@ -490,13 +489,13 @@ function renderPlaylistDetail(playlistName) {
         html += '<div class="song-card">' +
             '<img src="' + escapeHTML(s.art) + '" alt="art">' +
             '<div class="info" onclick="window.playSongFromList(\'' + escapeHTML(s.url) + '\')">' +
-                '<h4>' + escapeHTML(s.title) + '</h4>' +
-                '<p>' + escapeHTML(s.artist) + '</p>' +
+            '<h4>' + escapeHTML(s.title) + '</h4>' +
+            '<p>' + escapeHTML(s.artist) + '</p>' +
             '</div>' +
             '<button class="remove-btn icon-btn" data-url="' + escapeHTML(s.url) + '">' +
-                '<span class="material-symbols-rounded">delete</span>' +
+            '<span class="material-symbols-rounded">delete</span>' +
             '</button>' +
-        '</div>';
+            '</div>';
     }
     DOM.playlistSongsContainer.innerHTML = html;
 
@@ -513,7 +512,6 @@ function renderPlaylistDetail(playlistName) {
                 }
                 userPlaylists[playlistName] = filtered;
                 savePlaylists();
-                // FIX: Checks cache state and safely clears local audio data if unneeded
                 syncSongOffline(urlToRemove);
                 renderPlaylistDetail(playlistName);
                 renderPlaylists();
@@ -575,6 +573,8 @@ function showSongContextMenu(x, y, song) {
     DOM.contextPlaylistOptions.style.display = 'none';
     DOM.contextSongOptions.style.display = 'block';
 
+    if (DOM.contextPlayerOptions) DOM.contextPlayerOptions.style.display = 'none';
+
     positionContextMenu(x, y);
 
     var html = '';
@@ -586,7 +586,7 @@ function showSongContextMenu(x, y, song) {
         var accentColor = '#00a0ff';
 
         html += '<li data-name="' + escapeHTML(pName) + '">' + escapeHTML(pName) +
-                '<span class="material-symbols-rounded" style="color:' + accentColor + '">' + icon + '</span></li>';
+            '<span class="material-symbols-rounded" style="color:' + accentColor + '">' + icon + '</span></li>';
     }
     DOM.contextPlaylistItems.innerHTML = html;
 
@@ -599,9 +599,8 @@ function showSongContextMenu(x, y, song) {
 
                 if (idx === -1) userPlaylists[name].push(activeTargetSong.url);
                 else userPlaylists[name].splice(idx, 1);
-                
+
                 savePlaylists();
-                // FIX: Properly download or sync track configuration updates
                 syncSongOffline(activeTargetSong.url);
                 renderPlaylists();
 
@@ -621,6 +620,8 @@ function showPlaylistContextMenu(x, y, playlistName) {
 
     DOM.contextSongOptions.style.display = 'none';
     DOM.contextPlaylistOptions.style.display = 'block';
+
+    if (DOM.contextPlayerOptions) DOM.contextPlayerOptions.style.display = 'none';
 
     positionContextMenu(x, y);
 }
@@ -728,8 +729,13 @@ function bindEvents() {
     if (DOM.btnLoop) {
         DOM.btnLoop.addEventListener('click', function () {
             isLooping = !isLooping;
-            if (isLooping) DOM.btnLoop.classList.add('active');
-            else DOM.btnLoop.classList.remove('active');
+            if (isLooping) {
+                DOM.btnLoop.classList.add('active');
+                if (DOM.menuBtnLoop) DOM.menuBtnLoop.classList.add('active');
+            } else {
+                DOM.btnLoop.classList.remove('active');
+                if (DOM.menuBtnLoop) DOM.menuBtnLoop.classList.remove('active');
+            }
         });
     }
 
@@ -857,13 +863,14 @@ function bindEvents() {
             if (idx === -1) {
                 favoriteUrls.push(url);
                 DOM.btnFavorite.classList.add('fav-active');
+                if (DOM.menuBtnFavorite) DOM.menuBtnFavorite.classList.add('fav-active');
             } else {
                 favoriteUrls.splice(idx, 1);
                 DOM.btnFavorite.classList.remove('fav-active');
+                if (DOM.menuBtnFavorite) DOM.menuBtnFavorite.classList.remove('fav-active');
             }
 
             saveFavorites();
-            // FIX: Keep IndexedDB states strictly tracked
             syncSongOffline(url);
 
             if (currentPage === 1) renderFavorites();
@@ -884,6 +891,41 @@ function bindEvents() {
             if (bg) bg.src = "placeholder.png";
         });
     }
+
+    DOM.btnOverflowMenu.addEventListener('click', function (e) {
+        e.stopPropagation();
+
+        if (document.getElementById('contextSongOptions')) document.getElementById('contextSongOptions').style.display = 'none';
+        if (document.getElementById('contextPlaylistOptions')) document.getElementById('contextPlaylistOptions').style.display = 'none';
+
+        DOM.contextPlayerOptions.style.display = 'block';
+
+        var rect = DOM.btnOverflowMenu.getBoundingClientRect();
+
+        if (typeof positionContextMenu === 'function') {
+            positionContextMenu(rect.left - 80, rect.top - 180);
+        }
+    });
+
+    DOM.menuBtnLoop.addEventListener('click', function () {
+        DOM.btnLoop.click();
+        DOM.contextMenu.style.display = 'none';
+    });
+
+    DOM.menuBtnEQ.addEventListener('click', function () {
+        DOM.btnEQ.click();
+        DOM.contextMenu.style.display = 'none';
+    });
+
+    DOM.menuBtnStop.addEventListener('click', function () {
+        DOM.btnStop.click();
+        DOM.contextMenu.style.display = 'none';
+    });
+
+    DOM.menuBtnFavorite.addEventListener('click', function () {
+        DOM.btnFavorite.click();
+        DOM.contextMenu.style.display = 'none';
+    });
 
     document.addEventListener('click', function (e) {
         if (DOM.contextMenu && !DOM.contextMenu.contains(e.target) && !e.target.closest('.song-card') && !e.target.closest('.playlist-card')) {
@@ -919,7 +961,6 @@ function bindEvents() {
                         delete userPlaylists[activeTargetPlaylist];
                         savePlaylists();
 
-                        // FIX: Re-evaluates metadata labels of cached songs under the new playlist name
                         songsToSync.forEach(function (url) {
                             syncSongOffline(url);
                         });
@@ -941,7 +982,6 @@ function bindEvents() {
                 delete userPlaylists[activeTargetPlaylist];
                 savePlaylists();
 
-                // FIX: Clears local cached tracks if they no longer exist inside favorites or any other remaining playlist
                 songsInDeletedPlaylist.forEach(function (url) {
                     syncSongOffline(url);
                 });
@@ -989,7 +1029,6 @@ function loadOfflineSongs(callback) {
 
     req.onsuccess = function (e) {
         var records = e.target.result || [];
-        // FIX: Keeps url unchanged so it maps to localStorage profiles flawlessly. Playback gets isolated to its own blob Url.
         var songs = records.map(function (r) {
             var blobUrl = '';
             if (r.blob) {
@@ -1002,8 +1041,8 @@ function loadOfflineSongs(callback) {
             return {
                 title: r.title,
                 artist: r.artist,
-                url: r.url, // Original identifier URL
-                blobUrl: blobUrl, // Local target path
+                url: r.url,
+                blobUrl: blobUrl,
                 art: r.art
             };
         });
@@ -1015,10 +1054,8 @@ function loadOfflineSongs(callback) {
 function bootMusic() {
     openOfflineDB(function () {
         if (isOnline()) {
-            // normal online XML load
             loadMusic();
         } else {
-            // offline: use cached songs
             loadOfflineSongs(function (songs) {
                 allSongs = songs;
                 currentPlaylist = allSongs.slice(0);
@@ -1047,6 +1084,37 @@ function bootMusic() {
             }
         }
     }
+})();
+
+(function () {
+    var menu = document.getElementById('contextMenu');
+    if (!menu) return;
+
+    var backdrop = document.createElement('div');
+    backdrop.id = 'contextMenuBackdrop';
+    backdrop.className = 'context-menu-backdrop';
+    menu.parentNode.insertBefore(backdrop, menu);
+
+    function closeMenuAnimation() {
+        menu.classList.remove('show');
+        backdrop.classList.remove('show');
+    }
+
+    backdrop.addEventListener('click', closeMenuAnimation);
+    window.addEventListener('resize', closeMenuAnimation);
+
+    var observer = new MutationObserver(function () {
+        if (menu.style.display && menu.style.display !== 'none') {
+            menu.style.display = '';
+            menu.classList.add('show');
+            backdrop.classList.add('show');
+        } else if (menu.style.display === 'none') {
+            menu.style.display = '';
+            closeMenuAnimation();
+        }
+    });
+
+    observer.observe(menu, { attributes: true, attributeFilter: ['style'] });
 })();
 
 (function initWindowsIntegration() {
@@ -1088,7 +1156,7 @@ function bootMusic() {
                 tileUpdater.enableNotificationQueue(true);
                 tileUpdater.clear();
 
-                for (var i = 0; i < Math.min(items.length, 5) ; i++) {
+                for (var i = 0; i < Math.min(items.length, 5); i++) {
                     var songNode = items[i];
                     var getT = function (tag) {
                         var el = songNode.getElementsByTagName(tag)[0];
@@ -1329,7 +1397,6 @@ function bootMusic() {
     }
 })();
 
-// FIX: Cleaned up the closing bracket syntax error and simplified boot sequences
 updateNavArrows();
 bindEvents();
 bootMusic();
