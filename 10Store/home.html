@@ -7,78 +7,6 @@
     <script src="ms-appx-web:///lib/winjs-4.0.1/js/base.js"></script>
     <script src="ms-appx-web:///lib/winjs-4.0.1/js/ui.js"></script>
     <link rel="stylesheet" href="ms-appx-web:///css/cardstyles.css" />
-<script>
-(function () {
-  // Create banner element once (template)
-  const createBanner = () => {
-    const wrapper = document.createElement('div');
-    wrapper.className = 'top-banner';
-    wrapper.setAttribute('role', 'region');
-    wrapper.setAttribute('aria-label', 'Announcement banner');
-    wrapper.setAttribute('aria-live', 'polite');
-    wrapper.innerHTML = `
-      <div class="banner-text">
-        <span class="tag">#10Store3.0</span>
-        <span>Something big is coming</span>
-      </div>
-      <button class="dismiss" aria-label="Dismiss announcement, tell it to Fuck off" title="Fuck off">&times;</button>
-    `;
-    return wrapper;
-  };
-
-  // Keep a reference to the banner node so we can reattach the same node
-  let banner = createBanner();
-
-  // Dismiss behavior
-  const attachDismiss = (node) => {
-    const btn = node.querySelector('.dismiss');
-    if (!btn) return;
-    btn.addEventListener('click', () => {
-      node.style.transition = 'transform 0.35s ease, opacity 0.35s ease';
-      node.style.transform = 'translateY(-100%)';
-      node.style.opacity = '0';
-      setTimeout(() => {
-        if (node.parentNode) node.parentNode.removeChild(node);
-        document.body.classList.remove('has-banner');
-      }, 360);
-    });
-  };
-
-  // Insert banner outside body so body.innerHTML won't remove it
-  const insertBanner = () => {
-    // If already present, do nothing
-    if (document.getElementById && document.getElementById('__top_banner_marker')) return;
-    // Use a marker id on a wrapper to detect presence
-    banner.id = '__top_banner_marker';
-    // Prepend to documentElement (before <body>)
-    const docEl = document.documentElement;
-    docEl.insertBefore(banner, docEl.firstChild);
-    // Ensure body has top padding so content isn't hidden
-    document.body.classList.add('has-banner');
-    attachDismiss(banner);
-  };
-
-  // Initial insert as early as possible
-  try { insertBanner(); } catch (e) { /* fail silently */ }
-
-  // MutationObserver fallback: reinsert if removed
-  const observer = new MutationObserver((mutations) => {
-    // If banner node is not in DOM, reinsert it
-    if (!document.getElementById('__top_banner_marker')) {
-      // recreate banner to avoid stale event listeners if needed
-      banner = createBanner();
-      insertBanner();
-    }
-  });
-
-  // Observe top-level children of documentElement and body for removals
-  observer.observe(document.documentElement, { childList: true });
-  observer.observe(document.body, { childList: true, subtree: false });
-
-  // Optional: stop observing after a short time if you prefer (reduce overhead)
-  // setTimeout(() => observer.disconnect(), 30000);
-})();
-</script>
     <style>
         * {
             outline: none !important;
@@ -92,67 +20,6 @@
             height: 100%;
             margin: 0;
             padding: 0;
-        }
-
-        /* Banner styles */
-        .top-banner {
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            height: 64px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            background: linear-gradient(90deg, #ff7a18, #ff3d81);
-            color: #fff;
-            font-weight: 700;
-            font-size: 20px;
-            z-index: 9999;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.15);
-            padding: 0 16px;
-            box-sizing: border-box;
-        }
-
-        .top-banner .banner-text {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-        }
-
-        .top-banner .tag {
-            background: rgba(255,255,255,0.12);
-            padding: 6px 10px;
-            border-radius: 18px;
-            font-weight: 800;
-            font-size: 16px;
-        }
-
-        .top-banner .dismiss {
-            position: absolute;
-            right: 12px;
-            top: 50%;
-            transform: translateY(-50%);
-            background: transparent;
-            border: none;
-            color: rgba(255,255,255,0.95);
-            font-size: 20px;
-            cursor: pointer;
-            padding: 6px;
-            line-height: 1;
-        }
-
-        .top-banner .dismiss:focus {
-            outline: 2px solid rgba(255,255,255,0.4);
-            border-radius: 4px;
-        }
-
-        /* Make room for the fixed banner so content isn't hidden */
-        body.has-banner {
-            padding-top: 64px;
         }
 
         body {
@@ -326,44 +193,10 @@
             .hero-desc {
                 font-size: 14px;
             }
-
-            .top-banner {
-                height: 56px;
-                font-size: 18px;
-            }
-
-            body.has-banner {
-                padding-top: 56px;
-            }
         }
     </style>
 </head>
 <body class="win-type-body">
-    <script>
-        // Dismissible banner behavior
-        (function () {
-            const banner = document.querySelector('.top-banner');
-            const dismiss = document.querySelector('.top-banner .dismiss');
-            dismiss.addEventListener('click', () => {
-                banner.style.transition = 'transform 0.35s ease, opacity 0.35s ease';
-                banner.style.transform = 'translateY(-100%)';
-                banner.style.opacity = '0';
-                // remove banner after animation and remove body padding
-                setTimeout(() => {
-                    banner.remove();
-                    document.body.classList.remove('has-banner');
-                }, 360);
-            });
-
-            // Allow dismiss with Escape key for accessibility
-            document.addEventListener('keydown', (e) => {
-                if (e.key === 'Escape' && document.body.classList.contains('has-banner')) {
-                    dismiss.click();
-                }
-            });
-        })();
-    </script>
-
     <script src="ms-appx-web:///js/config.js"></script>
     <script src="home.js"></script>
 </body>
