@@ -10,7 +10,7 @@
     <link rel="stylesheet" href="style.css">
     <link href="google.css" rel="stylesheet">
 </head>
-<body class="win-dark">
+<body>
     <img id="body-bg" src="placeholder.png" aria-hidden="true">
     <header class="app-header">
         <h1>DrayMusic</h1>
@@ -74,6 +74,12 @@
             <button id="btnRenamePlaylist" class="context-btn">Rename Playlist</button>
             <button id="btnDeletePlaylist" class="context-btn" style="color: #ff5252;">Delete Playlist</button>
         </div>
+        <div id="contextPlayerOptions" style="display: none;">
+            <button id="menuBtnLoop" class="context-btn"><span class="material-symbols-rounded">repeat</span></button>
+            <button id="menuBtnEQ" class="context-btn"><span class="material-symbols-rounded">tune</span></button>
+            <button id="menuBtnStop" class="context-btn"><span class="material-symbols-rounded">stop</span></button>
+            <button id="menuBtnFavorite" class="context-btn"><span class="material-symbols-rounded">star</span></button>
+        </div>
     </div>
 
     <section class="mini-player notplaying">
@@ -93,12 +99,13 @@
 
             <div class="action-btns">
                 <button id="btnEQ" class="icon-btn wigdisable"><span class="material-symbols-rounded">tune</span></button>
-                <button id="btnFavorite" class="icon-btn"><span class="material-symbols-rounded">star</span></button>
-                <button id="btnLoop" class="icon-btn"><span class="material-symbols-rounded">repeat</span></button>
+                <button id="btnFavorite" class="icon-btn wigdisable"><span class="material-symbols-rounded">star</span></button>
+                <button id="btnLoop" class="icon-btn wigdisable"><span class="material-symbols-rounded">repeat</span></button>
                 <button id="btnPrev" class="icon-btn"><span class="material-symbols-rounded">skip_previous</span></button>
                 <button id="btnPlayPause" class="main-play-btn"><span class="material-symbols-rounded">play_arrow</span></button>
                 <button id="btnNext" class="icon-btn"><span class="material-symbols-rounded">skip_next</span></button>
-                <button id="btnStop" class="icon-btn"><span class="material-symbols-rounded">stop</span></button>
+                <button id="btnStop" class="icon-btn wigdisable"><span class="material-symbols-rounded">stop</span></button>
+                <button id="btnOverflowMenu" class="icon-btn wigdisable"><span class="material-symbols-rounded">more_vert</span></button>
             </div>
         </div>
     </section>
