@@ -1,3 +1,8 @@
+@font-face {
+    font-family: "Roboto Condensed";
+    src: url("Roboto_Condensed/RobotoCondensed-VariableFont_wght.ttf") format("truetype");
+}
+
 :root {
     --bg: #000000;
     --surface: #121212;
@@ -43,7 +48,176 @@ body {
 }
 
     body.SamsungExperience * {
+        font-family: "Roboto Condensed";
+        backdrop-filter: none !important;
+        -webkit-backdrop-filter: none !important;
+    }
+
+    body.SamsungExperience #body-bg {
+        filter: blur(20px);
+        opacity: 0.6;
+        animation: none;
+    }
+
+    body.SamsungExperience .app-header {
+        background: transparent;
+        padding: 12px 16px;
+    }
+
+    body.SamsungExperience .app-header h1 {
+        font-size: 25px !important;
+        margin: 0 0 8px 0;
+        font-weight: 500 !important;
+        text-transform: uppercase !important;
+    }
+
+    body.SamsungExperience .song-card {
+        padding: 8px 0 !important;
+    }
+
+    body.SamsungExperience .mini-player {
+        background: transparent !important;
+        left: 0 !important;
+        right: 0 !important;
+        bottom: 0 !important;
+        border-top-left-radius: 13px !important;
+        border-top-right-radius: 13px !important;
+        border-bottom-left-radius: 0px !important;
+        border-bottom-right-radius: 0px !important;
+    }
+
+    body.SamsungExperience .action-btns {
+        border-radius: 0 !important;
+        background: transparent !important;
+        backdrop-filter: none !important;
+        -webkit-backdrop-filter: none !important;
+    }
+
+    body.SamsungExperience .icon-btn,
+    body.SamsungExperience .main-play-btn {
+        background: transparent !important;
         border-radius: 0px !important;
+        display: flex !important;
+        display: -ms-flexbox !important;
+        align-items: center !important;
+        -ms-flex-align: center !important;
+        justify-content: center !important;
+        -ms-flex-pack: center !important;
+        transition: none !important;
+        scale: none !important;
+        transform: none !important;
+    }
+
+    body.SamsungExperience .page {
+        padding-top: 0px !important;
+        padding-bottom: 0px !important;
+    }
+
+    body.SamsungExperience .page-container {
+        padding-top: 96px;
+        padding-bottom: 74px !important;
+    }
+
+    body.SamsungExperience .search-pill {
+        padding: 5px 8px !important;
+    }
+
+    body.SamsungExperience .context-menu {
+        background: #ffffff !important;
+        border: none !important;
+        border-radius: 8px !important;
+    }
+
+    body.SamsungExperience .context-menu h4 {
+        color: #000000 !important;
+        font-size: 15px !important;
+        text-transform: uppercase !important;
+    }
+
+    body.SamsungExperience .context-menu li {
+        color: #000000 !important;
+        border-radius: 0px !important;
+    }
+
+        body.SamsungExperience .context-menu li:hover {
+            background: rgb(225 225 225);
+        }
+
+        body.SamsungExperience .context-actions input {
+            background: rgb(200 200 200);
+            border: none;
+        }
+
+    body.SamsungExperience .context-btn {
+        background: rgb(225 225 225);
+        color: #000000;
+    }
+
+        body.SamsungExperience .context-btn:hover {
+            background: rgb(200 200 200);
+        }
+
+    body.SamsungExperience #menuBtnStop {
+        display: none;
+    }
+
+body.SamsungExperience .side-pane {
+    background: rgb(255 255 255) !important;
+    padding: 0px !important;
+    transition: right 0.4s cubic-bezier(0.22, 0.61, 0.36, 1) !important;
+}
+
+body.SamsungExperience .pane-header {
+    justify-content: flex-start !important;
+    padding: 6px !important;
+    margin-bottom: 0px !important;
+    border-bottom: 1px solid #e0e0e0 !important;
+}
+
+    body.SamsungExperience .pane-header h2 {
+        color: black !important;
+        font-size: 20px !important;
+        font-weight: 500 !important;
+        text-transform: uppercase !important;
+    }
+
+body.SamsungExperience #btnCloseEQ {
+    color: var(--accent) !important;
+    order: -1 !important;
+    margin-right: 8px !important;
+}
+
+body.SamsungExperience .control-group {
+    margin-bottom: 0px !important;
+    background: rgba(255, 255, 255, 0.05) !important;
+    border-radius: 0px !important;
+    border-bottom: 1px solid #e0e0e0 !important;
+}
+
+    body.SamsungExperience .control-group h3 {
+        color: #999999 !important;
+        margin-bottom: 5px !important;
+        font-size: 15px !important;
+        font-weight: 500 !important;
+        text-transform: uppercase !important;
+    }
+
+    body.SamsungExperience .eq-slider-col label {
+        font-size: 13px !important;
+        color: #000000 !important;
+        margin-top: 5px !important;
+    }
+
+    body.SamsungExperience .win-switch-label {
+        color: #000000 !important;
+    }
+
+body.SamsungExperience .page::-webkit-scrollbar-thumb {
+    background: rgba(255, 255, 255, 0.25) !important;
+}
+
+    body.SamsungExperience .page::-webkit-scrollbar-thumb:hover {
+        background: rgba(255, 255, 255, 0.50) !important;
     }
 
     body.widgetapp .app-header {
@@ -901,6 +1075,14 @@ input {
 }
 
 @media (min-width: 800px) {
+    body.SamsungExperience .page-container {
+        padding-top: 62px !important;
+    }
+
+    body.SamsungExperience .side-pane {
+        border: none !important;
+    }
+    
     .app-header {
         display: flex;
         display: -ms-flexbox;
@@ -911,7 +1093,7 @@ input {
     }
 
         .app-header h1 {
-            margin: 0;
+            margin: 0 !important;
         }
 
     .search-pill {
