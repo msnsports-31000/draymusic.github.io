@@ -11,7 +11,7 @@
     <link href="google.css" rel="stylesheet">
 </head>
 <body class="win-dark">
-    <img id="body-bg" src="gradient.gif" aria-hidden="true">
+    <img id="body-bg" src="placeholder.png" aria-hidden="true">
     <header class="app-header">
         <h1>DrayMusic</h1>
         <div class="search-pill">
@@ -40,9 +40,9 @@
                     <div style="padding: 0 0 20px 0;text-align: center;">
                         <h3>Playlists</h3>
 
-                        <div style="display: flex; gap: 8px; margin-top: 15px; padding: 0 10px;">
-                            <input type="text" id="pageNewPlaylistInput" placeholder="New Playlist Name" style="flex:1; background: rgba(0,0,0,0.3); border: 1px solid rgba(255,255,255,0.2); color: white; padding: 8px 12px; border-radius: 8px; outline: none;">
-                            <button id="btnPageCreatePlaylist" style="background: #00a0ff; background: var(--accent); color: white; border: none; padding: 8px 16px; border-radius: 8px; font-weight: 500;">Create</button>
+                        <div style="padding: 0px 10px; margin-top: 15px; display: flex; justify-content: center;">
+                            <input type="text" id="pageNewPlaylistInput" placeholder="New Playlist Name" style="flex:1; background: rgba(0,0,0,0.3); border: 1px solid rgba(255,255,255,0.2); color: white; padding: 8px 12px; border-radius: 8px; outline: none; max-width: 500px; margin-right: 8px;">
+                            <button id="btnPageCreatePlaylist" style="background: #00a0ff; background: var(--accent); color: white; border: none; padding: 8px 16px; border-radius: 8px; font-weight: 500; font-size: 20px;">+</button>
                         </div>
                     </div>
 
@@ -76,7 +76,7 @@
         </div>
     </div>
 
-    <section class="mini-player">
+    <section class="mini-player notplaying">
         <div class="progress-wrapper">
             <input type="range" id="seekBar" value="0" step="0.1">
             <div class="progress-fill" id="progressFill"></div>
@@ -93,10 +93,12 @@
 
             <div class="action-btns">
                 <button id="btnEQ" class="icon-btn wigdisable"><span class="material-symbols-rounded">tune</span></button>
+                <button id="btnFavorite" class="icon-btn"><span class="material-symbols-rounded">star</span></button>
                 <button id="btnLoop" class="icon-btn"><span class="material-symbols-rounded">repeat</span></button>
                 <button id="btnPrev" class="icon-btn"><span class="material-symbols-rounded">skip_previous</span></button>
                 <button id="btnPlayPause" class="main-play-btn"><span class="material-symbols-rounded">play_arrow</span></button>
                 <button id="btnNext" class="icon-btn"><span class="material-symbols-rounded">skip_next</span></button>
+                <button id="btnStop" class="icon-btn"><span class="material-symbols-rounded">stop</span></button>
             </div>
         </div>
     </section>
@@ -156,5 +158,14 @@
 
     <audio id="audioElement" msAudioCategory="BackgroundCapableMedia" crossorigin="anonymous"></audio>
     <script src="app.js"></script>
+    <script>
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', function () {
+                navigator.serviceWorker.register('sw.js')['catch'](function (e) {
+                    console.log('SW reg failed', e);
+                });
+            });
+        }
+    </script>
 </body>
 </html>
