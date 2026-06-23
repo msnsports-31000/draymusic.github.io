@@ -91,7 +91,7 @@ body {
 
     body.win-type-body #seekBar {
         top: 0px;
-        height: 0px;
+        height: 10px;
         cursor: default !important;
     }
 
