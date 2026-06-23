@@ -15,13 +15,13 @@
     <header class="app-header">
         <h1>DrayMusic</h1>
         <div class="search-pill">
-            <span class="material-symbols-rounded">search</span>
+            <span class="icon-windows"></span>
             <input type="text" id="searchInput" placeholder="Search songs or artists...">
         </div>
     </header>
 
-    <button id="navLeft" class="nav-arrow left" style="display: none;"><span class="material-symbols-rounded">chevron_left</span></button>
-    <button id="navRight" class="nav-arrow right"><span class="material-symbols-rounded">chevron_right</span></button>
+    <button id="navLeft" class="nav-arrow left"><span class="icon-windows"></span></button>
+    <button id="navRight" class="nav-arrow right"><span class="icon-windows"></span></button>
 
     <main class="scroll-area page-viewport">
         <div id="pageContainer" class="page-container">
@@ -51,7 +51,7 @@
 
                 <div id="playlistDetailView" style="display: none;">
                     <div style="padding: 10px 0 20px 0; display: flex; align-items: center; gap: 15px;">
-                        <button id="btnBackToPlaylists" class="icon-btn" style="background: rgba(255,255,255,0.1); border-radius: 50%;"><span class="material-symbols-rounded">arrow_back</span></button>
+                        <button id="btnBackToPlaylists" class="icon-btn" style="background: rgba(255,255,255,0.1); border-radius: 50%;"><span class="icon-windows"></span></button>
                         <h3 id="detailPlaylistTitle" style="margin:0; color: white;">Playlist Name</h3>
                     </div>
                     <div id="playlistSongsContainer"></div>
@@ -75,10 +75,10 @@
             <button id="btnDeletePlaylist" class="context-btn" style="color: #ff5252;">Delete Playlist</button>
         </div>
         <div id="contextPlayerOptions" style="display: none;">
-            <button id="menuBtnLoop" class="context-btn"><span class="material-symbols-rounded">repeat</span></button>
-            <button id="menuBtnEQ" class="context-btn"><span class="material-symbols-rounded">tune</span></button>
-            <button id="menuBtnStop" class="context-btn"><span class="material-symbols-rounded">stop</span></button>
-            <button id="menuBtnFavorite" class="context-btn"><span class="material-symbols-rounded">star</span></button>
+            <button id="menuBtnLoop" class="context-btn"><span class="icon-windows"></span></button>
+            <button id="menuBtnEQ" class="context-btn"><span class="icon-windows"></span></button>
+            <button id="menuBtnStop" class="context-btn"><span class="icon-windows"></span></button>
+            <button id="menuBtnFavorite" class="context-btn"><span class="icon-windows"></span></button>
         </div>
     </div>
 
@@ -98,14 +98,14 @@
             </div>
 
             <div class="action-btns">
-                <button id="btnEQ" class="icon-btn wigdisable"><span class="material-symbols-rounded">tune</span></button>
-                <button id="btnFavorite" class="icon-btn wigdisable"><span class="material-symbols-rounded">star</span></button>
-                <button id="btnLoop" class="icon-btn wigdisable"><span class="material-symbols-rounded">repeat</span></button>
-                <button id="btnPrev" class="icon-btn"><span class="material-symbols-rounded">skip_previous</span></button>
-                <button id="btnPlayPause" class="main-play-btn"><span class="material-symbols-rounded">play_arrow</span></button>
-                <button id="btnNext" class="icon-btn"><span class="material-symbols-rounded">skip_next</span></button>
-                <button id="btnStop" class="icon-btn wigdisable"><span class="material-symbols-rounded">stop</span></button>
-                <button id="btnOverflowMenu" class="icon-btn wigdisable"><span class="material-symbols-rounded">more_vert</span></button>
+                <button id="btnEQ" class="icon-btn wigdisable"><span class="icon-windows"></span></button>
+                <button id="btnFavorite" class="icon-btn wigdisable"><span class="icon-windows"></span></button>
+                <button id="btnLoop" class="icon-btn wigdisable"><span class="icon-windows"></span></button>
+                <button id="btnPrev" class="icon-btn"><span class="icon-windows"></span></button>
+                <button id="btnPlayPause" class="main-play-btn"><span class="icon-windows"></span></button>
+                <button id="btnNext" class="icon-btn"><span class="icon-windows"></span></button>
+                <button id="btnStop" class="icon-btn wigdisable"><span class="icon-windows"></span></button>
+                <button id="btnOverflowMenu" class="icon-btn wigdisable"><span class="icon-windows"></span></button>
             </div>
         </div>
     </section>
@@ -113,7 +113,7 @@
     <div id="eqPane" class="side-pane">
         <div class="pane-header">
             <h2>Audio Settings</h2>
-            <button id="btnCloseEQ" class="icon-btn"><span class="material-symbols-rounded">close</span></button>
+            <button id="btnCloseEQ" class="icon-btn"><span class="icon-windows"></span></button>
         </div>
 
         <div class="pane-content">
@@ -133,7 +133,7 @@
                 </div>
             </div>
 
-            <div class="control-group">
+            <div class="control-group uwpdisable">
                 <h3>Playback</h3>
                 <div class="slider-row">
                     <label>Speed</label>
