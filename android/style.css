@@ -1,4 +1,9 @@
 @font-face {
+    font-family: "win10-icon";
+    src: url("segmdl2.ttf") format("truetype");
+}
+
+@font-face {
     font-family: "Roboto Condensed";
     src: url("Roboto_Condensed/RobotoCondensed-VariableFont_wght.ttf") format("truetype");
 }
@@ -28,14 +33,15 @@ img {
     pointer-events: none;
 }
 
-html, body {
-    border-radius: 20px;
+.icon-windows {
+    font-family: "win10-icon";
+    font-size: 20px;
 }
 
 body {
     margin: 0;
     padding: 0;
-    font-family: system-ui,-apple-system,Segoe UI,Ubuntu,Cantarell,Noto Sans,sans-serif, "Segoe UI", Roboto;
+    font-family: system-ui,-apple-system,Segoe UI,Ubuntu,Cantarell,Noto Sans,sans-serif,"Segoe UI",Roboto;
     background-color: #000000;
     background-color: var(--bg);
     color: #e6e1e5;
@@ -47,10 +53,237 @@ body {
     overflow: hidden;
 }
 
+    body.win-type-body * {
+        transition: none;
+        border-radius: 0px !important;
+        backdrop-filter: none;
+        -webkit-backdrop-filter: none;
+        filter: none;
+        -webkit-filter: none;
+    }
+
+    body.win-type-body .app-header {
+        background: #000000 !important;
+    }
+
+        body.win-type-body .app-header h1 {
+            font-size: 60px;
+            font-weight: 100 !important;
+        }
+
+    body.win-type-body .mini-player {
+        background: #00a0ff;
+        background: var(--accent);
+    }
+
+    body.win-type-body #body-bg, body.win-type-body #btnStop, body.win-type-body #menuBtnStop {
+        display: none;
+    }
+
+    body.win-type-body .progress-wrapper {
+        background: #000000;
+        height: 10px;
+    }
+
+        body.win-type-body .progress-wrapper:hover {
+            background: #505050;
+        }
+
+    body.win-type-body #seekBar {
+        top: 0px;
+        height: 0px;
+        cursor: default !important;
+    }
+
+        body.win-type-body #seekBar:active, body.win-type-body .progress-wrapper.seeking #seekBar {
+            height: 0px !important;
+            top: 0px !important;
+        }
+
+    body.win-type-body .progress-fill {
+        background: #ffffff;
+    }
+
+    body.win-type-body .text-group h4 {
+        font-size: 30px;
+        font-weight: 100;
+        color: #ffffff;
+    }
+
+    body.win-type-body .text-group p {
+        margin-bottom: 8px;
+        font-size: 15px;
+        font-weight: 100;
+        color: #ffffff;
+    }
+
+    body.win-type-body .track-info img {
+        width: 64px;
+        height: 64px;
+        background: #000000;
+    }
+
+    body.win-type-body .song-card {
+        background: #202020;
+        padding: 12px !important;
+        opacity: 1 !important;
+        transform: translateY(10px) !important;
+        -ms-transform: translateY(10px) !important;
+        animation: fadeUp 0s ease-out forwards !important;
+        margin-bottom: 8px !important;
+        border: 2px solid transparent;
+    }
+
+        body.win-type-body .song-card:hover {
+            background: #2b2b2b;
+            border-color: #3a3a3a;
+        }
+
+        body.win-type-body .song-card:active {
+            background: #505050;
+            border-color: #6a6a6a;
+        }
+
+    body.win-type-body .search-pill {
+        display: flex;
+        background: transparent;
+        padding: 0px;
+        transform: none;
+    }
+
+        body.win-type-body .search-pill input {
+            font-size: 15px;
+            padding: 10px;
+            height: 32px;
+            background: transparent;
+            border: 2px solid #666666;
+            margin-left: auto;
+        }
+
+            body.win-type-body .search-pill input:hover {
+                border-color: #999999;
+            }
+
+            body.win-type-body .search-pill input:focus {
+                color: #000000;
+                background: #ffffff;
+                border-color: #00a0ff;
+                border-color: var(--accent);
+            }
+
+            body.win-type-body .search-pill input::placeholder {
+                font-family: system-ui,-apple-system,Segoe UI,Ubuntu,Cantarell,Noto Sans,sans-serif,"Segoe UI",Roboto;
+                color: #666666;
+            }
+
+            body.win-type-body .search-pill input:hover::placeholder {
+                color: #999999;
+            }
+
+            body.win-type-body .search-pill input:focus::placeholder {
+                color: transparent;
+            }
+
+        body.win-type-body .search-pill .icon-windows {
+            display: none;
+        }
+
+    body.win-type-body .context-menu {
+        background: #000000;
+        position: fixed;
+        border: 2px solid;
+        border-color: #00a0ff;
+        border-color: var(--accent);
+        padding: 0px;
+        box-shadow: none;
+        min-width: 220px;
+    }
+
+        body.win-type-body .context-menu h4 {
+            margin: 10px;
+            color: #ffffff;
+            font-size: 18px;
+            font-weight: 100;
+        }
+
+    body.win-type-body .main-play-btn {
+        background: none !important;
+        border: none !important;
+        padding: 8px !important;
+        width: unset !important;
+        height: unset !important;
+        display: unset !important;
+        align-items: unset !important;
+        -ms-flex-align: unset !important;
+        justify-content: unset !important;
+        -ms-flex-pack: unset !important;
+        transform: none !important;
+    }
+
+        body.win-type-body .main-play-btn:hover {
+            color: #c0c0c0 !important;
+        }
+
+        body.win-type-body .main-play-btn:active {
+            color: #a0a0a0 !important;
+        }
+
+    body.win-type-body .icon-btn {
+        transform: none !important;
+    }
+
+        body.win-type-body .icon-btn:hover {
+            color: #c0c0c0 !important;
+        }
+
+        body.win-type-body .icon-btn:active {
+            color: #a0a0a0 !important;
+        }
+
+    body.win-type-body #btnLoop.active {
+        color: #000000 !important;
+    }
+
+    body.win-type-body .side-pane {
+        background: #000000 !important;
+        border: none;
+        padding: 0px !important;
+        transition: right 0.5s ease-out;
+    }
+
+    body.win-type-body .page {
+        padding-top: 0px !important;
+        padding-bottom: 0px !important;
+    }
+
+    body.win-type-body .page-container {
+        padding-top: 120px;
+        padding-bottom: 103px !important;
+        transition: transform 0.4s cubic-bezier(0.39,0.58,0.57,1);
+    }
+
+    body.win-type-body .nav-arrow {
+        border: 4px solid rgba(255,255,255,0.1);
+    }
+
+    body.win-type-body .pane-header {
+        padding: 6px !important;
+        margin-bottom: 0px !important;
+    }
+
+        body.win-type-body .pane-header h2 {
+            font-size: 32px !important;
+            font-weight: 100 !important;
+        }
+
+    body.win-type-body .uwpdisable {
+        display: none !important;
+    }
+
     body.SamsungExperience * {
         font-family: "Roboto Condensed";
-        backdrop-filter: none !important;
-        -webkit-backdrop-filter: none !important;
+        backdrop-filter: none;
+        -webkit-backdrop-filter: none;
     }
 
     body.SamsungExperience #body-bg {
@@ -64,12 +297,12 @@ body {
         padding: 12px 16px;
     }
 
-    body.SamsungExperience .app-header h1 {
-        font-size: 25px !important;
-        margin: 0 0 8px 0;
-        font-weight: 500 !important;
-        text-transform: uppercase !important;
-    }
+        body.SamsungExperience .app-header h1 {
+            font-size: 25px !important;
+            margin: 0 0 8px 0;
+            font-weight: 500 !important;
+            text-transform: uppercase !important;
+        }
 
     body.SamsungExperience .song-card {
         padding: 8px 0 !important;
@@ -93,8 +326,7 @@ body {
         -webkit-backdrop-filter: none !important;
     }
 
-    body.SamsungExperience .icon-btn,
-    body.SamsungExperience .main-play-btn {
+    body.SamsungExperience .icon-btn, body.SamsungExperience .main-play-btn {
         background: transparent !important;
         border-radius: 0px !important;
         display: flex !important;
@@ -128,25 +360,25 @@ body {
         border-radius: 8px !important;
     }
 
-    body.SamsungExperience .context-menu h4 {
-        color: #000000 !important;
-        font-size: 15px !important;
-        text-transform: uppercase !important;
-    }
-
-    body.SamsungExperience .context-menu li {
-        color: #000000 !important;
-        border-radius: 0px !important;
-    }
-
-        body.SamsungExperience .context-menu li:hover {
-            background: rgb(225 225 225);
+        body.SamsungExperience .context-menu h4 {
+            color: #000000 !important;
+            font-size: 15px !important;
+            text-transform: uppercase !important;
         }
 
-        body.SamsungExperience .context-actions input {
-            background: rgb(200 200 200);
-            border: none;
+        body.SamsungExperience .context-menu li {
+            color: #000000 !important;
+            border-radius: 0px !important;
         }
+
+            body.SamsungExperience .context-menu li:hover {
+                background: rgb(225 225 225);
+            }
+
+    body.SamsungExperience .context-actions input {
+        background: rgb(200 200 200);
+        border: none;
+    }
 
     body.SamsungExperience .context-btn {
         background: rgb(225 225 225);
@@ -161,46 +393,47 @@ body {
         display: none;
     }
 
-body.SamsungExperience .side-pane {
-    background: rgb(255 255 255) !important;
-    padding: 0px !important;
-    transition: right 0.4s cubic-bezier(0.22, 0.61, 0.36, 1) !important;
-}
-
-body.SamsungExperience .pane-header {
-    justify-content: flex-start !important;
-    padding: 6px !important;
-    margin-bottom: 0px !important;
-    border-bottom: 1px solid #e0e0e0 !important;
-}
-
-    body.SamsungExperience .pane-header h2 {
-        color: black !important;
-        font-size: 20px !important;
-        font-weight: 500 !important;
-        text-transform: uppercase !important;
+    body.SamsungExperience .side-pane {
+        background: rgb(255 255 255) !important;
+        padding: 0px !important;
+        transition: right 0.4s cubic-bezier(0.22,0.61,0.36,1) !important;
     }
 
-body.SamsungExperience #btnCloseEQ {
-    color: var(--accent) !important;
-    order: -1 !important;
-    margin-right: 8px !important;
-}
-
-body.SamsungExperience .control-group {
-    margin-bottom: 0px !important;
-    background: rgba(255, 255, 255, 0.05) !important;
-    border-radius: 0px !important;
-    border-bottom: 1px solid #e0e0e0 !important;
-}
-
-    body.SamsungExperience .control-group h3 {
-        color: #999999 !important;
-        margin-bottom: 5px !important;
-        font-size: 15px !important;
-        font-weight: 500 !important;
-        text-transform: uppercase !important;
+    body.SamsungExperience .pane-header {
+        justify-content: flex-start !important;
+        padding: 6px !important;
+        margin-bottom: 0px !important;
+        border-bottom: 1px solid #e0e0e0 !important;
     }
+
+        body.SamsungExperience .pane-header h2 {
+            color: black !important;
+            font-size: 20px !important;
+            font-weight: 500 !important;
+            text-transform: uppercase !important;
+        }
+
+    body.SamsungExperience #btnCloseEQ {
+        color: #00a0ff !important;
+        color: var(--accent) !important;
+        order: -1 !important;
+        margin-right: 8px !important;
+    }
+
+    body.SamsungExperience .control-group {
+        margin-bottom: 0px !important;
+        background: rgba(255,255,255,0.05) !important;
+        border-radius: 0px !important;
+        border-bottom: 1px solid #e0e0e0 !important;
+    }
+
+        body.SamsungExperience .control-group h3 {
+            color: #999999 !important;
+            margin-bottom: 5px !important;
+            font-size: 15px !important;
+            font-weight: 500 !important;
+            text-transform: uppercase !important;
+        }
 
     body.SamsungExperience .eq-slider-col label {
         font-size: 13px !important;
@@ -212,18 +445,18 @@ body.SamsungExperience .control-group {
         color: #000000 !important;
     }
 
-body.SamsungExperience .page::-webkit-scrollbar-thumb {
-    background: rgba(255, 255, 255, 0.25) !important;
-}
-
-    body.SamsungExperience .page::-webkit-scrollbar-thumb:hover {
-        background: rgba(255, 255, 255, 0.50) !important;
+    body.SamsungExperience .page::-webkit-scrollbar-thumb {
+        background: rgba(255,255,255,0.25) !important;
     }
+
+        body.SamsungExperience .page::-webkit-scrollbar-thumb:hover {
+            background: rgba(255,255,255,0.50) !important;
+        }
 
     body.widgetapp .app-header {
         padding: 0px 10px;
         -webkit-app-region: drag;
-        background: rgba(255, 255, 255, 0);
+        background: rgba(255,255,255,0);
         backdrop-filter: blur(3px);
         -webkit-backdrop-filter: blur(3px);
         display: flex;
@@ -266,7 +499,7 @@ body.SamsungExperience .page::-webkit-scrollbar-thumb {
         display: none;
     }
 
-    body.widgetapp .mini-player {
+    body.win-type-body .mini-player, body.widgetapp .mini-player {
         bottom: 0px !important;
         border-radius: 0px;
         left: 0px;
@@ -277,7 +510,7 @@ body.SamsungExperience .page::-webkit-scrollbar-thumb {
         padding: 0px 6px 0px 16px;
     }
 
-    body.widgetapp .action-btns {
+    body.win-type-body .action-btns, body.widgetapp .action-btns {
         background: transparent;
         backdrop-filter: none;
         -webkit-backdrop-filter: none;
@@ -348,7 +581,7 @@ body.SamsungExperience .page::-webkit-scrollbar-thumb {
     top: 0;
     left: 0;
     right: 0;
-    background: rgba(255, 255, 255, 0.10);
+    background: rgba(255,255,255,0.10);
     backdrop-filter: blur(20px);
     -webkit-backdrop-filter: blur(20px);
     z-index: 1;
@@ -362,7 +595,7 @@ body.SamsungExperience .page::-webkit-scrollbar-thumb {
     }
 
 .search-pill {
-    background: rgba(255, 255, 255, 0.10);
+    background: rgba(255,255,255,0.10);
     backdrop-filter: blur(20px);
     -webkit-backdrop-filter: blur(20px);
     border-radius: 28px;
@@ -371,7 +604,7 @@ body.SamsungExperience .page::-webkit-scrollbar-thumb {
     display: -ms-flexbox;
     align-items: center;
     -ms-flex-align: center;
-    transition: transform 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    transition: transform 0.2s cubic-bezier(0.175,0.885,0.32,1.275);
 }
 
     .search-pill > * {
@@ -410,7 +643,7 @@ body.SamsungExperience .page::-webkit-scrollbar-thumb {
     transform: translateY(10px);
     -ms-transform: translateY(10px);
     animation: fadeUp 0.5s ease-out forwards;
-    transition: transform 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275), background 0.2s;
+    transition: transform 0.2s cubic-bezier(0.175,0.885,0.32,1.275),background 0.2s;
     border-radius: 20px;
 }
 
@@ -433,7 +666,7 @@ body.SamsungExperience .page::-webkit-scrollbar-thumb {
         border-radius: 8px;
         -o-object-fit: cover;
         object-fit: cover;
-        background: rgba(255, 255, 255, 0.10);
+        background: rgba(255,255,255,0.10);
         backdrop-filter: blur(20px);
         -webkit-backdrop-filter: blur(20px);
     }
@@ -462,7 +695,7 @@ body.SamsungExperience .page::-webkit-scrollbar-thumb {
     bottom: 20px;
     left: 10px;
     right: 10px;
-    background: rgba(255, 255, 255, 0.10);
+    background: rgba(255,255,255,0.10);
     backdrop-filter: blur(20px);
     -webkit-backdrop-filter: blur(20px);
     border-radius: 20px;
@@ -478,7 +711,7 @@ body.SamsungExperience .page::-webkit-scrollbar-thumb {
     width: 100%;
     height: 8px;
     background: #333;
-    transition: height 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    transition: height 0.2s cubic-bezier(0.175,0.885,0.32,1.275);
     z-index: 20;
 }
 
@@ -499,8 +732,7 @@ body.SamsungExperience .page::-webkit-scrollbar-thumb {
     cursor: pointer !important;
 }
 
-    #seekBar:active,
-    .progress-wrapper.seeking #seekBar {
+    #seekBar:active, .progress-wrapper.seeking #seekBar {
         height: 60px;
         top: -25px;
     }
@@ -553,7 +785,7 @@ body.SamsungExperience .page::-webkit-scrollbar-thumb {
         width: 44px;
         height: 44px;
         border-radius: 6px;
-        background: rgba(255, 255, 255, 0.10);
+        background: rgba(255,255,255,0.10);
         backdrop-filter: blur(20px);
         -webkit-backdrop-filter: blur(20px);
     }
@@ -587,7 +819,7 @@ body.SamsungExperience .page::-webkit-scrollbar-thumb {
     -ms-flex-align: center;
     flex-shrink: 0;
     -ms-flex-negative: 0;
-    background: rgba(255, 255, 255, 0.10);
+    background: rgba(255,255,255,0.10);
     backdrop-filter: blur(20px);
     -webkit-backdrop-filter: blur(20px);
     border-radius: 20px;
@@ -603,7 +835,7 @@ body.SamsungExperience .page::-webkit-scrollbar-thumb {
         }
 
 .icon-btn, .main-play-btn {
-    transition: transform 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    transition: transform 0.2s cubic-bezier(0.175,0.885,0.32,1.275);
 }
 
 .icon-btn {
@@ -637,7 +869,7 @@ body.SamsungExperience .page::-webkit-scrollbar-thumb {
 .song-card:active {
     transform: scale(0.94) !important;
     -ms-transform: scale(0.94) !important;
-    background: rgba(255, 255, 255, 0.10);
+    background: rgba(255,255,255,0.10);
 }
 
 .search-pill:focus-within {
@@ -648,7 +880,7 @@ body.SamsungExperience .page::-webkit-scrollbar-thumb {
 #btnLoop.active {
     color: #00a0ff;
     color: var(--accent);
-    background: rgba(255, 255, 255, 0.10);
+    background: rgba(255,255,255,0.10);
     border-radius: 50%;
 }
 
@@ -660,7 +892,7 @@ body.SamsungExperience .page::-webkit-scrollbar-thumb {
     height: 100vh;
     backdrop-filter: blur(25px);
     -webkit-backdrop-filter: blur(25px);
-    transition: right 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    transition: right 0.3s cubic-bezier(0.175,0.885,0.32,1.275);
     z-index: 100;
     display: flex;
     display: -ms-flexbox;
@@ -697,7 +929,7 @@ body.SamsungExperience .page::-webkit-scrollbar-thumb {
 
 .control-group {
     margin-bottom: 25px;
-    background: rgba(255, 255, 255, 0.05);
+    background: rgba(255,255,255,0.05);
     padding: 15px;
     border-radius: 15px;
 }
@@ -758,17 +990,17 @@ body.SamsungExperience .page::-webkit-scrollbar-thumb {
 .playlist-grid-layout {
     display: grid;
     display: -ms-grid;
-    grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+    grid-template-columns: repeat(auto-fill,minmax(140px,1fr));
     grid-gap: 16px;
     gap: 16px;
     padding-top: 10px;
 }
 
 .playlist-card {
-    background: rgba(255, 255, 255, 0.05);
+    background: rgba(255,255,255,0.05);
     border-radius: 12px;
     padding: 12px;
-    transition: transform 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275), background 0.2s;
+    transition: transform 0.2s cubic-bezier(0.175,0.885,0.32,1.275),background 0.2s;
 }
 
     .playlist-card:active {
@@ -785,11 +1017,10 @@ body.SamsungExperience .page::-webkit-scrollbar-thumb {
     border-radius: 8px;
     overflow: hidden;
     margin-bottom: 12px;
-    background: rgba(0, 0, 0, 0.15);
+    background: rgba(0,0,0,0.15);
 }
 
-    .playlist-art-grid img,
-    .playlist-art-grid {
+    .playlist-art-grid img, .playlist-art-grid {
         width: 100%;
     }
 
@@ -831,7 +1062,7 @@ body.SamsungExperience .page::-webkit-scrollbar-thumb {
     display: -ms-flexbox;
     width: 300%;
     height: 100%;
-    transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.1);
+    transition: transform 0.4s cubic-bezier(0.175,0.885,0.32,1.1);
     will-change: transform;
     overflow: hidden;
 }
@@ -879,7 +1110,7 @@ body.SamsungExperience .page::-webkit-scrollbar-thumb {
     opacity: 0;
     visibility: hidden;
     transform: translateY(15px);
-    transition: opacity 0.25s cubic-bezier(0.4, 0, 0.2, 1), transform 0.25s cubic-bezier(0.4, 0, 0.2, 1), visibility 0.25s ease;
+    transition: opacity 0.25s cubic-bezier(0.4,0,0.2,1),transform 0.25s cubic-bezier(0.4,0,0.2,1),visibility 0.25s ease;
 }
 
 #contextMenu.show {
@@ -987,12 +1218,12 @@ body.SamsungExperience .page::-webkit-scrollbar-thumb {
 .nav-arrow {
     position: fixed;
     top: 50%;
-    transform: translateY(-50%) scale(0.5);
-    -ms-transform: translateY(-50%) scale(0.5);
-    background: rgba(255, 255, 255, 0.15);
+    transform: translateY(-50%) scale(0.5) !important;
+    -ms-transform: translateY(-50%) scale(0.5) !important;
+    background: rgba(255,255,255,0.15);
     backdrop-filter: blur(15px);
     -webkit-backdrop-filter: blur(15px);
-    border: 2px solid rgba(255, 255, 255, 0.1);
+    border: 2px solid rgba(255,255,255,0.1);
     color: white;
     width: 54px;
     height: 54px;
@@ -1005,7 +1236,7 @@ body.SamsungExperience .page::-webkit-scrollbar-thumb {
     justify-content: center;
     -ms-flex-pack: center;
     opacity: 0.3;
-    transition: opacity 300ms ease, transform 300ms ease;
+    transition: opacity 300ms ease,transform 300ms ease;
 }
 
     .nav-arrow:hover {
@@ -1029,6 +1260,7 @@ input {
 }
 
 #btnLoop.active, #menuBtnLoop.active {
+    color: #00a0ff;
     color: var(--accent) !important;
 }
 
@@ -1036,9 +1268,7 @@ input {
     color: #ffeb3b !important;
 }
 
-    #btnFavorite.fav-active .material-symbols-rounded,
-    .star-btn.fav-active .material-symbols-rounded,
-    #menuBtnFavorite.fav-active .material-symbols-rounded {
+    #btnFavorite.fav-active .material-symbols-rounded, .star-btn.fav-active .material-symbols-rounded, #menuBtnFavorite.fav-active .material-symbols-rounded {
         font-variation-settings: 'FILL' 1;
     }
 
@@ -1051,9 +1281,9 @@ input {
     left: 0;
     width: 100vw;
     height: 100vh;
-    background-color: rgba(0, 0, 0, 0.3);
+    background-color: rgba(0,0,0,0.3);
     z-index: 9998;
-    transition: opacity 0.3s ease, visibility 0.3s ease;
+    transition: opacity 0.3s ease,visibility 0.3s ease;
 }
 
     .context-menu-backdrop.show {
@@ -1062,7 +1292,7 @@ input {
         pointer-events: auto;
     }
 
-@media (max-width: 799px) {
+@media (max-width:799px) {
     #btnLoop, #btnEQ, #btnStop, #btnFavorite {
         display: none !important;
     }
@@ -1074,7 +1304,11 @@ input {
     }
 }
 
-@media (min-width: 800px) {
+@media (min-width:800px) {
+    body.win-type-body .search-pill input {
+        width: 212px;
+    }
+
     body.SamsungExperience .page-container {
         padding-top: 62px !important;
     }
@@ -1082,7 +1316,7 @@ input {
     body.SamsungExperience .side-pane {
         border: none !important;
     }
-    
+
     .app-header {
         display: flex;
         display: -ms-flexbox;
@@ -1116,7 +1350,7 @@ input {
     .side-pane {
         width: 300px;
         box-shadow: -5px 0 25px rgba(0,0,0,0.5);
-        border-left: 2px solid rgba(255, 255, 255, 0.1);
+        border-left: 2px solid rgba(255,255,255,0.1);
     }
 
     .control-group {
@@ -1141,7 +1375,7 @@ input {
     .song-card:active {
         transform: scale(0.99) !important;
         -ms-transform: scale(0.99) !important;
-        background: rgba(255, 255, 255, 0.10);
+        background: rgba(255,255,255,0.10);
     }
 
     .page {
